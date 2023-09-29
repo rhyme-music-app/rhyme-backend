@@ -1,0 +1,30 @@
+version: '4.0'
+
+services:
+
+  php-apache:
+    container_name: php-apache
+    image: php:8.0-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 8000:80
+  
+  database:
+    container_name: database
+    image: mysql
+    restart: always
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rhyme
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 12345679
+    ports:
+      - 9906:3306

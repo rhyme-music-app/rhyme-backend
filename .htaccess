@@ -1,0 +1,12 @@
+# https://stackoverflow.com/a/42803832/13680015
+
+RedirectMatch 404 (?i)/\.git
+RedirectMatch 404 (?i)/db_data
+RedirectMatch 404 (?i)/lib
+RedirectMatch 404 (?i)/vendor
+RedirectMatch 404 (?i)/\.env
+RedirectMatch 404 (?i)/\.env.*
+RedirectMatch 404 (?i)/composer.*
+RedirectMatch 404 (?i)/docker-compose.yml
+RedirectMatch 404 (?i)/Dockerfile
+ErrorDocument 404 /404.php

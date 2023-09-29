@@ -1,0 +1,22 @@
+{
+    "name": "rhyme-music-app/rhyme-music-app",
+    "type": "project",
+    "license": "3-clause BSD license",
+    "autoload": {
+        "files": [
+            "./lib/_global.php"
+        ],
+        "psr-4": {
+            "RhymeMusicApp\\RhymeMusicApp\\": "."
+        }
+    },
+    "authors": [
+        {
+            "name": "Vu Tung Lam",
+            "email": "vutunglaminfo@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}

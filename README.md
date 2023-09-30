@@ -29,7 +29,7 @@ To acquire a better understanding of databases and their applications, we togeth
 (Write this later)
 
 ## Project Filesystem Structure
- - `/`: Contains PHP scripts that dump views (user interface) to the end-users, as well as some necessary files.
+ - `/`: Contains PHP scripts that dump views (user interface) to the end-users, as well as some necessary files needed for the whole project.
  - `/api`: Contains PHP scripts that handle API endpoints.
  - `/lib`: Contains private and common PHP scripts that are included/required in forefront scripts, which are view scripts in `/` and API scripts in `/api` folder.
 
@@ -81,39 +81,11 @@ The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux
 
 Database data is saved into a folder named `db_data` in the project root. So to clear database data, first shut down the container, then delete that folder, and turn the container back on.
 
-## Troubleshooting
+If you encountered any errors while following the above steps, take a look at the **Troubleshooting** section in the file [CONTRIBUTING.md](/CONTRIBUTING.md).
 
-### Docker Error: Permission denied while trying to connect to the Docker daemon socket at unix:///...
+## Contributing
 
-This is because you forgot the `sudo` magic word while executing Docker commands on Linux. For example, you have to run:
-
-```sh
-sudo docker compose up
-```
-
-instead of just `docker compose up` as on Windows.
-
-If the problem persists, maybe you haven't started the Docker daemon yet. Do that by running:
-
-```sh
-sudo service docker start
-```
-
-then retry your previous attempt.
-
-### Docker Error: Error during connect: This error may indicate that the docker daemon is not running...
-
-Now run Docker Desktop, make sure the service has started, then retry.
-
-### PHP Error: Failed to open stream: No such file or directory
-
-This error is displayed in the browser when you load a page of the web app.
-
-If the error message starts with "Warning: require_once(...**/vendor/autoload.php**): Failed to open stream...", then maybe you forgot to run Composer commands before launching the Docker container. Reread the [Get Started](#get-started) section.
-
-If the problem persists: First and foremost, check the paths in `include` and `require` statements: Are the directories' names and order are written correctly ? Note that directories's names are case-sensitive !!!
-
-If the problem is still there, try other measures at <https://stackoverflow.com/a/36577021/13680015>.
+Open the file [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
 
 ## License
 Copyright (C) 2023-now Vũ Tùng Lâm, Nguyễn Hữu Phương and Đỗ Thái Sơn.

@@ -82,11 +82,11 @@ The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux
 
 Database data is saved into a folder named `db_data` in the project root. So to clear database data, first shut down the container, then delete that folder, and turn the container back on.
 
-If you encountered any errors while following the above steps, take a look at the **Troubleshooting** section in the file [CONTRIBUTING.md](/CONTRIBUTING.md).
+If you encountered any errors while following the above steps, take a look at the **Troubleshooting** section in the file [`CONTRIBUTING.md`](/CONTRIBUTING.md).
 
 ## Contributing
 
-Open the file [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
+Open the file [`CONTRIBUTING.md`](/CONTRIBUTING.md) for details.
 
 ## License
 Copyright (C) 2023-now Vũ Tùng Lâm, Nguyễn Hữu Phương and Đỗ Thái Sơn.

@@ -124,7 +124,7 @@ then retry.
 
 This error is displayed in the browser when you load a page of the web app.
 
-If the error message starts with "Warning: require_once(...**/vendor/autoload.php**): Failed to open stream...", then maybe you forgot to run Composer commands before launching the Docker container. Reread the [Get Started](#get-started) section.
+If the error message starts with "Warning: require_once(...**/vendor/autoload.php**): Failed to open stream...", then maybe you forgot to run Composer commands before launching the Docker container. Reread the [**Get Started** section in `README.md`](/README.md#get-started).
 
 If the problem persists: First and foremost, check the paths in `include` and `require` statements: Are the directories' names and order are written correctly ? Note that directories's names are case-sensitive !!!
 

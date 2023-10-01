@@ -41,7 +41,7 @@ Your machine must have the following software installed (**in order**):
  - Composer <https://getcomposer.org/download/>
  - Docker Desktop <https://www.docker.com/products/docker-desktop/>
 
-The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux distros should work out of the box.
+The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux distros should work out of the box. If you encountered any errors while following the steps, take a look at the [**Troubleshooting** section in the file `CONTRIBUTING.md`](/CONTRIBUTING.md#troubleshooting).
 
 0. Clone the repository to your local machine using Git. Then `cd` to the project root.
 
@@ -54,15 +54,33 @@ The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux
 
 2. Copy content in `.env.example` into a new file named `.env` in the project root, and modify the values in it if necessary.
 
-3. On Windows, open Docker Desktop and make sure the service (daemon) has started. On Linux, run the following command instead:
+3. Make sure the Docker service (daemon) has started.
+
+	**On Windows**, open Docker Desktop, then close the window. (If it displays "Docker Desktop starting...", wait for that message to disappear, then close the window.) Next, run **the following command to check Docker service status**:
+
+	```powershell
+	powershell -c "docker version | Out-Null"
+	```
+
+	If the command does not output anything, Docker service has started. If it outputs something like:
+
+		error during connect: This error may indicate that the docker daemon is not running.: Get ...
+
+	or:
+
+		Error response from daemon: open \\.\pipe\docker_engine_linux: The system cannot find the file specified.
+	
+	then Docker service has not started properly. Wait some more seconds then retry the check command above. If the problem persists, try opening Docker Desktop again as instructed initially.
+
+	**On Linux**, just run the following command instead:
 
 	```sh
 	sudo service docker start
 	```
 
-4. To switch the application on as a Docker container, run the following command on Windows:
+4. Still in the project root, to switch the application on as a Docker container, run the following command on Windows:
 
-	```sh
+	```powershell
 	docker compose up
 	```
 
@@ -81,8 +99,6 @@ The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux
 
 
 Database data is saved into a folder named `db_data` in the project root. So to clear database data, first shut down the container, then delete that folder, and turn the container back on.
-
-If you encountered any errors while following the above steps, take a look at the **Troubleshooting** section in the file [`CONTRIBUTING.md`](/CONTRIBUTING.md).
 
 ## Contributing
 

@@ -90,6 +90,10 @@ End-users can directly access the view routes to be served a webpage/user interf
 
 ## Troubleshooting
 
+### Docker Error: No configuration file provided: not found
+
+Perhaps you are running `docker compose up` outside of the project root. You have to `cd` into the project root before turning on the app's Docker container.
+
 ### Docker Error: Permission denied while trying to connect to the Docker daemon socket at unix:///...
 
 This is because you forgot the `sudo` magic word while executing Docker commands on Linux. For example, you have to run:

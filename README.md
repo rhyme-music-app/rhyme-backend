@@ -35,10 +35,11 @@ To acquire a better understanding of databases and their applications, we togeth
 
 ## Get Started
 
-Your machine must have the following software installed:
- - Docker Desktop <https://www.docker.com/products/docker-desktop/>
+Your machine must have the following software installed (**in order**):
  - Git <https://git-scm.com/downloads>
+ - PHP Interpreter. Setup guide: <https://www.geeksforgeeks.org/how-to-install-php-in-windows-10/>. Note that you may extract the software's content to a directory other than Program Files.
  - Composer <https://getcomposer.org/download/>
+ - Docker Desktop <https://www.docker.com/products/docker-desktop/>
 
 The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux distros should work out of the box.
 

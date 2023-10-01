@@ -78,13 +78,29 @@ The following steps are applicable on both Windows and Linux/Ubuntu. Other Linux
 	sudo service docker start
 	```
 
-4. Still in the project root, to switch the application on as a Docker container, run the following command on Windows:
+4. Still in the project root, to build Docker image, run the following command **on Windows**:
+
+	```powershell
+	docker compose build
+	```
+
+	or, **on Linux**:
+
+	```sh
+	sudo docker compose build
+	```
+
+5. **Now the setup completed. You don't have to repeat the above steps anymore, unless one of the Docker files (`docker-compose.yml` and `Dockerfile`) has been changed.**
+
+	From now on, you just have to do this step to switch the application on.
+	
+	Still in the project root, run the following command **on Windows**:
 
 	```powershell
 	docker compose up
 	```
 
-	or, on Linux:
+	or, **on Linux**:
 
 	```sh
 	sudo docker compose up

@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 2px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #151515, #303030, #14314D);
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+.login-page {
+}
+
+.custom-btn {
+    color: #FFFFFF;
+    font-size: 1.5em;
+    font-weight: 1000;
+    text-decoration: none;
+    padding: 10px 50px;
+    border-radius: 30px;
+    margin-top: 20px;
+    background: linear-gradient(to right, #14314D, #151515);
+}
+
+.custom-input { 
+    color: #FFFFFF;
+    font-size: 1.2em;
+    font-weight: 1000;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-top: 20px;
+    background: linear-gradient(to right, #14314D, #151515);
+}

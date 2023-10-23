@@ -24,7 +24,22 @@ section below.
 0. Clone the repository to your local machine using Git. Then `cd` to
    the project root.
 
-1. Run the following commands to install required PHP libraries.
+1. Enable the following PHP extensions (Google to know how to):
+
+   ```txt
+   bz2
+   curl
+   fileinfo
+   gd
+   intl
+   mbstring
+   mysqli
+   openssl
+   pdo_mysql
+   zip
+   ```
+
+2. Run the following commands to install required PHP libraries.
    After that, a new directory called `vendor` should appear inside
    the `/src` directory:
 
@@ -33,10 +48,10 @@ section below.
    composer dump-autoload
    ```
 
-2. Copy content in `.env.example` into a new file named `.env` in the
+3. Copy content in `.env.example` into a new file named `.env` in the
    project root, and modify the values in it if necessary.
 
-3. Make sure the Docker service (daemon) has started.
+4. Make sure the Docker service (daemon) has started.
 
    **On Windows**, open Docker Desktop, then close the window. (If it
    displays "Docker Desktop starting...", wait for that message to
@@ -71,7 +86,7 @@ section below.
     sudo service docker start
     ```
 
-4. Still in the project root, to build Docker image, run the following
+5. Still in the project root, to build Docker image, run the following
    command **on Windows**:
 
    ```powershell
@@ -84,7 +99,7 @@ section below.
    sudo docker compose build
    ```
 
-5. **Now the setup completed. You don't have to repeat the above steps**
+6. **Now the setup completed. You don't have to repeat the above steps**
    **anymore, unless one of the Docker files (`docker-compose.yml` and**
    **`Dockerfile`) has been changed.**
 
@@ -172,3 +187,20 @@ API backend by referring to the [API Documentation](./API.md).
 
    If the problem is still there, try other measures at
    <https://stackoverflow.com/a/36577021/13680015>.
+
+## Symfony Commands
+
+To make a new API controller:
+
+```sh
+php bin/console make:controller API\ControllerClassName
+```
+
+or a new Web controller:
+
+```sh
+php bin/console make:controller Web\ControllerClassName
+```
+
+Controller files are located under the `/src/Controller`
+directory.

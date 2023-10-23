@@ -27,7 +27,6 @@ section below.
 1. Enable the following PHP extensions (Google to know how to):
 
    ```txt
-   bz2
    curl
    fileinfo
    gd
@@ -35,8 +34,10 @@ section below.
    mbstring
    mysqli
    openssl
+   pdo
    pdo_mysql
    zip
+   opcache (optional, but highly recommended)
    ```
 
 2. Run the following commands to install required PHP libraries.

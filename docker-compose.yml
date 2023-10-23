@@ -2,21 +2,22 @@ version: '4.0'
 
 services:
 
-  php-apache:
-    container_name: php-apache
-    image: php:8.0-apache
+  rhyme-php-apache:
+    container_name: rhyme-php-apache
+    image: php:8.2-apache
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - database
+      - rhyme-mysql
     volumes:
-      - ./:/var/www/html
+      - ./:/var/www
+      - ./public:/var/www/html
     ports:
       - 8000:80
   
-  database:
-    container_name: database
+  rhyme-mysql:
+    container_name: rhyme-mysql
     image: mysql
     restart: always
     volumes:

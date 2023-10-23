@@ -1,5 +1,14 @@
-controllers:
+api_controllers:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Controller/API/
+        namespace: App\Controller\API
     type: attribute
+    prefix: /api
+    trailing_slash_on_root: false
+
+web_controllers:
+    resource:
+        path: ../src/Controller/Web/
+        namespace: App\Controller\Web
+    type: attribute
+    trailing_slash_on_root: false

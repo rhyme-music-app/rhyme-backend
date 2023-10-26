@@ -19,6 +19,10 @@ services:
       - ./public:/var/www/html
     ports:
       - 8000:80
+    # https://stackoverflow.com/a/70725882/13680015
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   rhyme-mysql:
     container_name: rhyme-mysql
@@ -34,3 +38,7 @@ services:
       # MYSQL_PASSWORD: 
     ports:
       - 9906:3306
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+ 

@@ -15,3 +15,6 @@ FROM php:8.2-apache
         RUN docker-php-ext-enable curl fileinfo gd intl mbstring mysqli openssl pdo pdo_mysql zip opcache
         # https://stackoverflow.com/a/48955845/13680015
         RUN a2enmod rewrite
+
+EXPOSE 8000
+EXPOSE 9906

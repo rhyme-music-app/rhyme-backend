@@ -22,5 +22,16 @@ Then, you have to enable required PHP extensions:
 8. pdo
 9. pdo_mysql
 10. sodium
-11. zip
-12. opcache (optional, but highly recommended)
+11. xml
+12. zip
+13. opcache (optional, but highly recommended)
+
+To enable those extensions on Linux, you may `cd` to the project root, then run:
+
+```sh
+sudo chmod +x linux-enable-php-extensions.sh
+sudo        ./linux-enable-php-extensions.sh
+```
+
+On Windows, find the `php.ini` file and uncomment the `extension=X` lines,
+where `X` is the name of a required extension. (Google for more.)

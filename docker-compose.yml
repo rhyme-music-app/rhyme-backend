@@ -1,5 +1,9 @@
 version: '4.0'
 
+# ATTENTION: When modifying values in this file, reflect the
+# changes in <projectroot>/src/Command/RefreshEnvDockerCommand.php
+# also.
+
 services:
 
   rhyme-php-apache:
@@ -21,11 +25,12 @@ services:
     image: mysql
     restart: always
     volumes:
-      - ./db_data:/var/lib/mysql
+      - ./db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: rhyme
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: 12345679
+      # MYSQL_USER: 
+      # MYSQL_PASSWORD: 
     ports:
       - 9906:3306

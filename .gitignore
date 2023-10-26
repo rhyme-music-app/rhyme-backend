@@ -9,4 +9,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-db_data
+.env
+
+# Docker-containerized MySQL server's data
+db-data

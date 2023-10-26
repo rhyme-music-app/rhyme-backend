@@ -35,6 +35,7 @@ class HomeController extends AbstractController
 
         $md = $converter->convert(file_get_contents(__DIR__ . '/../../../docs/API.md'));
         $md = '
+        <!DOCTYPE html>
         <html>
             <head>
                 <style>

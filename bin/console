@@ -10,6 +10,49 @@ if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
+// Before calling the function marked (*) below, Symfony tries to load .env,
+// and if the file has yet existed, it will yield a fatal error, which ultimately
+// terminates the command's execution, without reaching the relevant console command
+// class in src/Command.
+//
+// So, both RefreshEnvDockerCommand and RefreshEnvSymfonyCommand, although aiming
+// at refreshing .env, will not be able to create the .env file in case it does
+// not exist, since they aren't even reached !
+//
+// To solve this, we add the following check ; if .env is not present, we write
+// to it the default values first.
+
+$envPath = __DIR__ . '/../.env';
+if (!file_exists($envPath)) {
+    if (false == file_put_contents($envPath,
+"APP_ENV=dev
+APP_SECRET=
+DATABASE_HOST=
+DATABASE_PORT=
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASS=
+"
+    )) {
+        echo "Error: Cannot create file .env ; it may currently be locked by another process.";
+        die();
+    }
+    echo
+"
+================ IMPORTANT NOTICE =======================
+New .env file created. You should run
+    php bin/console app:refresh-env-docker
+or
+    php bin/console app:refresh-env-symfony
+If you are not sure which to run, read README.md first.
+=========================================================
+Press ENTER to run the current command as usual.
+";
+    fgets(STDIN);
+    echo "\n";
+}
+
+// Function (*)
 return function (array $context) {
     $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 

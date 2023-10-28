@@ -22,9 +22,19 @@ class RefreshEnvUtils
                 return Command::FAILURE;
             }
 
+            $changeSecret = $newValues['changesecret'];
+            if ($changeSecret === false) {
+                // Default behavior: APP_SECRET will be created if it hasn't existed ;
+                // otherwise it will be left unchanged.
+                if (!isset($oldEnv['APP_SECRET']) || empty($oldEnv['APP_SECRET'])) {
+                    // The secret hasn't existed yet, so we make one.
+                    $changeSecret = true;
+                }
+            }
+
             self::replaceEnv($content, 'APP_ENV', $oldEnv['APP_ENV'] ?? '', $newValues['activeenv'] ?? 'dev');
 
-            self::replaceEnv($content, 'APP_SECRET', $oldEnv['APP_SECRET'] ?? '', self::generate_APP_SECRET());
+            if ($changeSecret) self::replaceEnv($content, 'APP_SECRET', $oldEnv['APP_SECRET'] ?? '', self::generate_APP_SECRET());
 
             self::replaceEnv($content, 'DATABASE_HOST', $oldEnv['DATABASE_HOST'] ?? '', $newValues['dbhost']);
 

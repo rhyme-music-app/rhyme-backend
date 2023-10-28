@@ -17,6 +17,7 @@ class RefreshEnvSymfonyCommand extends Command
         // In case of Symfony's local development server:
         // Let the user decide what is what.
         $this
+            ->addOption('changesecret', null, InputOption::VALUE_NONE, 'Specify this option if you want to change APP_SECRET (which will invalidate current login tokens!). If this option is not specified, APP_SECRET will be created if it hasn\'t existed ; otherwise it will be left unchanged.')
             ->addOption('activeenv', null, InputOption::VALUE_REQUIRED, 'Application active environment. Can be either "dev" (development) or "prod" (production).', 'dev')
             ->addOption('dbname', null, InputOption::VALUE_REQUIRED, 'MySQL database name.', 'rhyme')
             ->addOption('dbuser', null, InputOption::VALUE_REQUIRED, 'MySQL database username.', 'root')
@@ -29,7 +30,7 @@ class RefreshEnvSymfonyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $newValues = [];
-        foreach (['activeenv', 'dbname', 'dbuser', 'dbpass', 'dbhost', 'dbport', 'tz'] as $option) {
+        foreach (['changesecret', 'activeenv', 'dbname', 'dbuser', 'dbpass', 'dbhost', 'dbport', 'tz'] as $option) {
             $newValues[$option] = $input->getOption($option);
         }
 

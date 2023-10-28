@@ -17,17 +17,19 @@ class RefreshEnvSymfonyCommand extends Command
         // In case of Symfony's local development server:
         // Let the user decide what is what.
         $this
+            ->addOption('activeenv', null, InputOption::VALUE_REQUIRED, 'Application active environment. Can be either "dev" (development) or "prod" (production).', 'dev')
             ->addOption('dbname', null, InputOption::VALUE_REQUIRED, 'MySQL database name.', 'rhyme')
             ->addOption('dbuser', null, InputOption::VALUE_REQUIRED, 'MySQL database username.', 'root')
             ->addOption('dbpass', null, InputOption::VALUE_REQUIRED, 'MySQL database password.', '')
             ->addOption('dbhost', null, InputOption::VALUE_REQUIRED, 'MySQL database hostname.', 'localhost')
-            ->addOption('dbport', null, InputOption::VALUE_REQUIRED, 'MySQL database port.', '3306');
+            ->addOption('dbport', null, InputOption::VALUE_REQUIRED, 'MySQL database port.', '3306')
+            ->addOption('tz', null, InputOption::VALUE_REQUIRED, 'PHP timezone. See <https://www.php.net/manual/en/timezones.php>', 'Asia/Ho_Chi_Minh');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $newValues = [];
-        foreach (['dbname', 'dbuser', 'dbpass', 'dbhost', 'dbport'] as $option) {
+        foreach (['activeenv', 'dbname', 'dbuser', 'dbpass', 'dbhost', 'dbport', 'tz'] as $option) {
             $newValues[$option] = $input->getOption($option);
         }
 

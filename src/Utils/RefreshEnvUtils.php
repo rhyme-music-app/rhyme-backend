@@ -22,6 +22,8 @@ class RefreshEnvUtils
                 return Command::FAILURE;
             }
 
+            self::replaceEnv($content, 'APP_ENV', $oldEnv['APP_ENV'] ?? '', $newValues['activeenv'] ?? 'dev');
+
             self::replaceEnv($content, 'APP_SECRET', $oldEnv['APP_SECRET'] ?? '', self::generate_APP_SECRET());
 
             self::replaceEnv($content, 'DATABASE_HOST', $oldEnv['DATABASE_HOST'] ?? '', $newValues['dbhost']);
@@ -33,6 +35,8 @@ class RefreshEnvUtils
             self::replaceEnv($content, 'DATABASE_USER', $oldEnv['DATABASE_USER'] ?? '', $newValues['dbuser']);
 
             self::replaceEnv($content, 'DATABASE_PASS', $oldEnv['DATABASE_PASS'] ?? '', $newValues['dbpass']);
+
+            self::replaceEnv($content, 'TIME_ZONE', $oldEnv['TIME_ZONE'] ?? '', $newValues['tz'] ?? 'Asia/Ho_Chi_Minh');
 
             if (false == file_put_contents($path, $content)) {
                 $output->writeln("Error: Cannot write to file .env");

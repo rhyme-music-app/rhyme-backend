@@ -6,6 +6,7 @@ use App\Utils\RefreshEnvUtils;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'app:refresh-env-docker', description: 'Creates or refreshes .env values for Dockerized Apache server.')]
@@ -15,13 +16,18 @@ class RefreshEnvDockerCommand extends Command
     {
         // In case of Dockerized Apache server:
         // Reflects the information in docker-compose.yml.
-        // => no options present to the user !
+        // => no options present to the user, except this one !
+        $this
+            ->addOption('activeenv', null, InputOption::VALUE_REQUIRED, 'Application active environment. Can be either "dev" (development) or "prod" (production).', 'dev')
+            ->addOption('tz', null, InputOption::VALUE_REQUIRED, 'PHP timezone. See <https://www.php.net/manual/en/timezones.php>', 'Asia/Ho_Chi_Minh');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Instead, the values are hardcoded as in docker-compose.yml.
         $newValues = [
+            'activeenv' => $input->getOption('activeenv'),
+            'tz' => $input->getOption('tz'),
+            // The following values are hardcoded as in docker-compose.yml.
             'dbname' => 'rhyme',
             'dbuser' => 'root',
             'dbpass' => '',

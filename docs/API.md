@@ -218,21 +218,21 @@
 
 The following object schemas are listed in their alphabetical order.
 
-## ArtistInfo
+### ArtistInfo
 
-## ArtistUpdate
+### ArtistUpdate
 
-## GenreInfo
+### GenreInfo
 
-## GenreUpdate
+### GenreUpdate
 
-## PlaylistInfo
+### PlaylistInfo
 
-## PlaylistUpdate
+### PlaylistUpdate
 
-## SongInfo
+### SongInfo
 
-## SongUpdate
+### SongUpdate
 
 ### UserInfo
 

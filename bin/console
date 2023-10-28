@@ -25,14 +25,8 @@ require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 $envPath = __DIR__ . '/../.env';
 if (!file_exists($envPath)) {
     if (false == file_put_contents($envPath,
-"APP_ENV=dev
-APP_SECRET=
-DATABASE_HOST=
-DATABASE_PORT=
-DATABASE_NAME=
-DATABASE_USER=
-DATABASE_PASS=
-"
+        "APP_ENV=dev\n"
+        // More variables will be created when running refresh-env-* commands.
     )) {
         echo "Error: Cannot create file .env ; it may currently be locked by another process.";
         die();

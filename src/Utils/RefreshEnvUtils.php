@@ -55,6 +55,17 @@ class RefreshEnvUtils
             // Original content
             $content
         );
+        if (false === strstr($content, $varName)) {
+            // Variable not exists before, so we have to add it.
+            $N = strlen($content);
+            if ($N == 0 || ($N > 0 && $content[$N - 1] === "\n")) {
+                // No need to add trailing newline before adding new variable.
+            }
+            else {
+                $content .= "\n";
+            }
+            $content .= "$varName=$newVarValue\n";
+        }
     }
 
     protected static function generate_APP_SECRET(): string

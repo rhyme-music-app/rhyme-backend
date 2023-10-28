@@ -2,26 +2,34 @@
 namespace App\Utils;
 
 use PDO;
-use PDOStatement;
 
 class DatabaseConnection
 {
-    public static function execute(string $sql): int|false
+    public static function execute(string $sql)
     {
         self::prepareConnection();
         return self::$conn->exec($sql);
     }
 
-    public static function prepare(string $sqlWithParams): PDOStatement|false
+    public static function prepare(string $sqlWithParams): DatabaseStatement
     {
         self::prepareConnection();
-        return self::$conn->prepare($sqlWithParams);
+        return new DatabaseStatement(self::$conn->prepare($sqlWithParams));
     }
 
     public static function lastInsertId(): string|null
     {
+        self::prepareConnection();
         return self::$conn->lastInsertId();
     }
+
+    public static function getPDO(): PDO
+    {
+        self::prepareConnection();
+        return self::$conn;
+    }
+
+    ///////////////////////////////////////////////////////////
 
     private static ?PDO $conn = null;
 

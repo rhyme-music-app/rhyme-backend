@@ -12,4 +12,10 @@ class QueryParam
     public const INT = PDO::PARAM_INT;
 
     public const NULL = PDO::PARAM_NULL;
+
+    // Be careful: The following values must not be set the
+    // same as any of PDO::PARAM_* constants, or any set of
+    // them bitwised together.
+
+    public const DATETIME = -1;
 }

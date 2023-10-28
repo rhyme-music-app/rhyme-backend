@@ -26,46 +26,64 @@
 
 ### Authentication API
 
-1. **POST /auth/login**
+1. **POST /api/auth/register**
 
-    Returns access token of a user, given their credentials.
+    Registers a new user.
 
-     - Payload: `{ email, password }`.
-     - Response on success: `{ accessToken }`.
+     - Payload: [`UserUpdate`](#userupdate).
+     - Response on success: [`UserInfo`](#userinfo).
 
-2. **POST AUTH /auth/logout**
+2. **POST /api/auth/login**
 
-    Invalidates an access token of an authenticated user. The invalidated token can no longer be used.
+    Returns token of a user, given their credentials.
+
+     - Payload:
+
+        ```json
+        {
+            "email": "any@email.com",
+            "password": "12345678"
+        }
+        ```
+
+     - Response on success:
+
+        ```json
+        {
+            "accessToken": "..."
+        }
+        ```
+
+3. **POST AUTH /api/auth/logout**
+
+    Invalidates a token of an authenticated user. The invalidated token can no longer be used.
 
      - Empty payload.
      - Empty response on success.
 
 ### User API
 
-1. **GET /user/{user_id}**
+1. **GET /api/users/{user_id}**
 
     Returns information of a user, given their ID.
 
      - Empty payload.
-     - Response on success: `UserInfo`.
+     - Response on success: [`UserInfo`](#userinfo).
 
-2. **POST /user/signup** OR **POST /user**
+2. **POST /api/users/signup** OR **POST /users**
 
-    Registers a new user.
+    Same as `/api/auth/register`.
 
-     - Payload: `UserUpdate`.
-     - Response on success: `UserInfo`.
-
-3. **PUT AUTH /user/{user_id}**
+3. **PUT AUTH /api/users/{user_id}**
 
     Updates information of a user, given their ID and the updated information.
 
     Every user, including every admin, cannot update information of another user.
 
-     - Payload: `UserUpdate`.
-     - Response on success: `UserInfo`.
+     - Payload: [`UserUpdate`](#userupdate).
+     - Response on success: [`UserInfo`](#userinfo).
 
-4. **DELETE AUTH /user/{user_id}**
+4. **DELETE AUTH /api/users/{user_id}**
 
     Deregisters, or deletes a user account, given their ID.
 
@@ -78,28 +96,28 @@
 
 ### Playlist API
 
-1. **GET /playlist/{playlist_id}**
+1. **GET /api/playlists/{playlist_id}**
 
     Returns information of a playlist, given its ID. If the playlist is not owned by the currently-authenticated user, then it must be public.
 
      - Empty payload.
-     - Response on success: `PlaylistInfo`.
+     - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-2. **POST AUTH /playlist**
+2. **POST AUTH /api/playlists**
 
     Creates a new playlist.
 
-     - Payload: `PlaylistUpdate`.
-     - Response on success: `PlaylistInfo`.
+     - Payload: [`PlaylistUpdate`](#playlistupdate).
+     - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-3. **PUT AUTH /playlist/{playlist_id}**
+3. **PUT AUTH /api/playlists/{playlist_id}**
 
     Updates an existing playlist, given its ID. The playlist must be owned by the currently-authenticated user, with one exception: an admin can change playlists of anyone, regardless of whether the playlists are public or private.
 
-     - Payload: `PlaylistUpdate`.
-     - Response on success: `PlaylistInfo`.
+     - Payload: [`PlaylistUpdate`](#playlistupdate).
+     - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-4. **DELETE AUTH /playlist/{playlist_id}**
+4. **DELETE AUTH /api/playlists/{playlist_id}**
 
     Deletes an existing playlist, given its ID. Same restrictions as PUT method above are applied here.
 
@@ -108,28 +126,28 @@
 
 ### Genre API
 
-1. **GET /genre/{genre_id}**
+1. **GET /api/genres/{genre_id}**
 
     Returns information of a genre.
 
      - Empty payload.
-     - Response on success: `GenreInfo`.
+     - Response on success: [`GenreInfo`](#genreinfo).
 
-2. **POST AUTH ADMIN /genre**
+2. **POST AUTH ADMIN /api/genres**
 
     Creates a new genre.
 
-     - Payload: `GenreUpdate`.
-     - Response on success: `GenreInfo`.
+     - Payload: [`GenreUpdate`](#genreupdate).
+     - Response on success: [`GenreInfo`](#genreinfo).
 
-3. **PUT AUTH ADMIN /genre/{genre_id}**
+3. **PUT AUTH ADMIN /api/genres/{genre_id}**
 
     Updates an existing genre.
 
-     - Payload: `GenreUpdate`.
-     - Response on success: `GenreInfo`.
+     - Payload: [`GenreUpdate`](#genreupdate).
+     - Response on success: [`GenreInfo`](#genreinfo).
 
-4. **DELETE AUTH ADMIN /genre/{genre_id}**
+4. **DELETE AUTH ADMIN /api/genres/{genre_id}**
 
     Deletes an existing genre.
 
@@ -138,28 +156,28 @@
 
 ### Artist API
 
-1. **GET /artist/{artist_id}**
+1. **GET /api/artists/{artist_id}**
 
     Returns information of an artist, given their ID.
 
      - Empty payload.
-     - Response on success: `ArtistInfo`.
+     - Response on success: [`ArtistInfo`](#artistinfo).
 
-2. **POST AUTH ADMIN /artist**
+2. **POST AUTH ADMIN /api/artists**
 
     Adds a new artist.
 
-     - Payload: `ArtistUpdate`.
-     - Response on success: `ArtistInfo`.
+     - Payload: [`ArtistUpdate`](#artistupdate).
+     - Response on success: [`ArtistInfo`](#artistinfo).
 
-3. **PUT AUTH ADMIN /artist/{artist_id}**
+3. **PUT AUTH ADMIN /api/artists/{artist_id}**
 
     Updates an existing artist.
 
-    - Payload: `ArtistUpdate`.
-    - Response on success: `ArtistInfo`.
+    - Payload: [`ArtistUpdate`](#artistupdate).
+    - Response on success: [`ArtistInfo`](#artistinfo).
 
-4. **DELETE AUTH ADMIN /artist/{artist_id}**
+4. **DELETE AUTH ADMIN /api/artists/{artist_id}**
 
     Deletes an existing artist.
 
@@ -168,28 +186,28 @@
 
 ### Song API
 
-1. **GET /song/{song_id}**
+1. **GET /api/songs/{song_id}**
 
     Returns information of a song. Do not increment streams.
 
      - Empty payload.
-     - Response on success: `SongInfo`.
+     - Response on success: [`SongInfo`](#songinfo).
 
-2. **POST AUTH ADMIN /song**
+2. **POST AUTH ADMIN /api/songs**
 
     Adds a new song.
 
-     - Payload: `SongUpdate`.
-     - Response on success: `SongInfo`.
+     - Payload: [`SongUpdate`](#songupdate).
+     - Response on success: [`SongInfo`](#songinfo).
 
-3. **PUT AUTH ADMIN /song/{song_id}**
+3. **PUT AUTH ADMIN /api/songs/{song_id}**
 
     Updates information of a song.
 
-     - Payload: `SongUpdate`.
-     - Response on success: `SongInfo`.
+     - Payload: [`SongUpdate`](#songupdate).
+     - Response on success: [`SongInfo`](#songinfo).
 
-4. **DELETE AUTH ADMIN /song/{song_id}**
+4. **DELETE AUTH ADMIN /api/songs/{song_id}**
 
     Deletes a song.
 
@@ -197,3 +215,47 @@
      - Empty response on success.
 
 ## JSON Object Schemas
+
+The following object schemas are listed in their alphabetical order.
+
+## ArtistInfo
+
+## ArtistUpdate
+
+## GenreInfo
+
+## GenreUpdate
+
+## PlaylistInfo
+
+## PlaylistUpdate
+
+## SongInfo
+
+## SongUpdate
+
+### UserInfo
+
+```json
+{
+    "success": true,
+    "id": "13680015",
+    "email": "any@email.com",
+    "name": "User's Full Name",
+    "is_admin": false, // or true
+    "deleted": false // or true
+}
+```
+
+### UserUpdate
+
+```json
+{
+    "email": "any@email.com",
+    "password": "123456789",
+    "name": "User's Full Name"
+}
+```
+
+In case of registering a new user, all the fields are required.
+Otherwise, specify the updated fields only.

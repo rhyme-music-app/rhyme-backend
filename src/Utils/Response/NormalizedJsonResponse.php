@@ -3,6 +3,7 @@ namespace App\Utils\Response;
 
 use App\Utils\DateTimeUtils;
 use DateTime;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class NormalizedJsonResponse extends JsonResponse
@@ -10,6 +11,17 @@ class NormalizedJsonResponse extends JsonResponse
     public function __construct(array $data, int $status, array $headers = [])
     {
         self::replaceAllPHPDateTimeWithString($data);
+
+        if (array_key_exists('success', $data)) {
+            throw new RuntimeException('Key `success` must not be present in JSON data passed to NormalizedJsonResponse.');
+        }
+        
+        if ($status != 200) {
+            $data['success'] = false;
+        } else {
+            $data['success'] = true;
+        }
+
         parent::__construct($data, $status, $headers);
     }
 

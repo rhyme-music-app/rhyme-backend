@@ -1,10 +1,10 @@
 <?php
 namespace App\Utils\Exception;
 
-use Exception;
 use IntlChar;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class ValidationException extends Exception
+class ValidationException extends BadRequestHttpException
 {
     public function __construct(string $keyName, string $fault, ?string $message)
     {

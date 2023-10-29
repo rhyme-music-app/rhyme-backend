@@ -263,6 +263,25 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`favorite_playlist_user` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `rhyme`.`tokens`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `rhyme`.`tokens` ;
+
+CREATE TABLE IF NOT EXISTS `rhyme`.`tokens` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `issued_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tokens_users_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tokens_users_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `rhyme`.`users` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

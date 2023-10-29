@@ -8,9 +8,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Utils\DatabaseConnection;
+use App\Utils\QueryFetch;
 use App\Utils\QueryParam;
 use App\Utils\Response\UserInfoResponse;
+use App\Utils\Response\UserTokenResponse;
 use App\Utils\Validator;
+
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 #[Route('/auth', name: 'auth_')]
 class AuthController extends AbstractController
@@ -42,5 +46,34 @@ class AuthController extends AbstractController
         $stmt->execute();
 
         return new UserInfoResponse(DatabaseConnection::lastInsertId());
+    }
+
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        Validator::validateArray_AllMustExist($data, [
+            'email' => 'users.email',
+            'password' => 'users.password',
+        ]);
+        $email = $data['email'];
+        $password = $data['password'];
+
+        $stmt = DatabaseConnection::prepare('SELECT id, password_hash FROM users WHERE email = :email');
+        $stmt->bindParam(':email', $email, QueryParam::STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(QueryFetch::ASSOC);
+        if (!$user) {
+            throw new UnauthorizedHttpException('None', 'Wrong email or password.');
+        }
+        
+        $passwordHash = $user['password_hash'];
+        if (!password_verify($password, $passwordHash)) {
+            throw new UnauthorizedHttpException('None', 'Wrong email or password.');
+        }
+
+        return new UserTokenResponse($user['id']);
     }
 }

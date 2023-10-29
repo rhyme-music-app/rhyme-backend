@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Utils\DatabaseResetter;
+use App\Utils\Response\NormalizedJsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 #[Route('/reset', name: 'reset_')]
 class ResetController extends AbstractController
@@ -19,14 +21,10 @@ class ResetController extends AbstractController
         $data = json_decode($request->getContent(), true);
         if (($data['APP_SECRET'] ?? '') === $_ENV['APP_SECRET']) {
             DatabaseResetter::resetDatabase();
-            return $this->json([
-                'success' => true,
+            return new NormalizedJsonResponse([
                 'message' => 'Database reset successfully !'
             ], 200);
         }
-        return $this->json([
-            'success' => false,
-            'message' => 'Wrong secret !'
-        ], 403);
+        throw new UnauthorizedHttpException('None', 'Wrong APP_SECRET !');
     }
 }

@@ -50,7 +50,8 @@
 
         ```json
         {
-            "accessToken": "..."
+            "success": true,
+            "token": "..."
         }
         ```
 

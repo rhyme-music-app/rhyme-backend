@@ -7,9 +7,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Middleware\Auth;
+
 use App\Utils\DatabaseConnection;
 use App\Utils\QueryFetch;
 use App\Utils\QueryParam;
+use App\Utils\Response\NormalizedJsonResponse;
 use App\Utils\Response\UserInfoResponse;
 use App\Utils\Response\UserTokenResponse;
 use App\Utils\Validator;
@@ -75,5 +78,13 @@ class AuthController extends AbstractController
         }
 
         return new UserTokenResponse($user['id']);
+    }
+
+    #[Route('/logout', name: 'logout', methods: ['POST'])]
+    public function logout(Request $request): JsonResponse
+    {
+        Auth::assertAndLogout($request);
+
+        return new NormalizedJsonResponse([], 200);
     }
 }

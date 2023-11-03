@@ -16,3 +16,9 @@ php bin/console make:controller Web\ControllerClassName
 
 Controller files are located under the `/src/Controller`
 directory.
+
+To make an event subscriber:
+
+```sh
+php bin/console make:subscriber ExceptionSubscriber kernel.exception
+```

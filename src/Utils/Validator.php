@@ -5,7 +5,23 @@ use App\Utils\Exception\ValidationException;
 
 class Validator
 {
-    public static function validateArray_AllMustExist(array $array, array $specs, ?string $message = null): void
+    private static $specs_UserUpdate = [
+        'email' => 'users.email',
+        'password' => 'users.password',
+        'name' => 'users.name',
+    ];
+
+    public static function validateUserUpdate_AllMustPresent(array $array, ?string $message = null): void
+    {
+        /*return*/ Validator::validateArray_AllMustPresent($array, self::$specs_UserUpdate, $message);
+    }
+
+    public static function validateUserUpdate_AllAreOptional(array $array, ?string $message = null): array
+    {
+        return Validator::validateArray_AllAreOptional($array, self::$specs_UserUpdate, $message);
+    }
+
+    public static function validateArray_AllMustPresent(array $array, array $specs, ?string $message = null): void
     {
         foreach ($specs as $key => $path) {
             if (!array_key_exists($key, $array)) {
@@ -13,6 +29,21 @@ class Validator
             }
             self::validate($array[$key], $path, $key, $message);
         }
+    }
+
+    /**
+     * @return \array an indexed array containing all present fields.
+     */
+    public static function validateArray_AllAreOptional(array $array, array $specs, ?string $message = null): array
+    {
+        $availableFields = [];
+        foreach ($specs as $key => $path) {
+            if (array_key_exists($key, $array)) {
+                self::validate($array[$key], $path, $key, $message);
+                $availableFields[] = $key;
+            }
+        }
+        return $availableFields;
     }
 
     public static function validate(mixed &$value, string $path, string $keyName, ?string $message): void

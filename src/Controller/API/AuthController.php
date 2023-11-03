@@ -22,16 +22,11 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 #[Route('/auth', name: 'auth_')]
 class AuthController extends AbstractController
 {
-    #[Route('/register', name: 'register', methods: ['POST'])]
-    public function register(Request $request): JsonResponse
+    public static function _internal_register(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        Validator::validateArray_AllMustExist($data, [
-            'email' => 'users.email',
-            'password' => 'users.password',
-            'name' => 'users.name',
-        ]);
+        Validator::validateUserUpdate_allMustPresent($data);
         $email = $data['email'];
         $password = $data['password'];
         $name = $data['name'];
@@ -51,12 +46,18 @@ class AuthController extends AbstractController
         return new UserInfoResponse(DatabaseConnection::lastInsertId());
     }
 
+    #[Route('/register', name: 'register', methods: ['POST'])]
+    public function register(Request $request): JsonResponse
+    {
+        return self::_internal_register($request);
+    }
+
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        Validator::validateArray_AllMustExist($data, [
+        Validator::validateArray_AllMustPresent($data, [
             'email' => 'users.email',
             'password' => 'users.password',
         ]);

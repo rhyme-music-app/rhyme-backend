@@ -5,6 +5,7 @@ use App\Utils\DatabaseConnection;
 use App\Utils\QueryParam;
 use App\Utils\QueryFetch;
 use App\Utils\DatabaseQueryOutputFixer;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserInfoResponse extends NormalizedJsonResponse
 {
@@ -18,6 +19,10 @@ class UserInfoResponse extends NormalizedJsonResponse
         $stmt->execute();
 
         $json = $stmt->fetch(QueryFetch::ASSOC);
+        if (!$json) {
+            throw new BadRequestHttpException('Invalid user ID.');
+        }
+
         DatabaseQueryOutputFixer::fixBool($json, 'is_admin');
         DatabaseQueryOutputFixer::fixBool($json, 'deleted');
 

@@ -23,7 +23,7 @@ class UserController extends AbstractController
         return new UserInfoResponse($userId);
     }
 
-    #[Route(['', '/', '/signup'], name: 'register1', methods: ['POST'])]
+    #[Route(['', '/', '/signup'], name: 'register', methods: ['POST'])]
     public function registerUser(Request $request): JsonResponse
     {
         return AuthController::_internal_register($request);

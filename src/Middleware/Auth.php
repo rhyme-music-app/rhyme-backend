@@ -2,11 +2,32 @@
 namespace App\Middleware;
 
 use App\Utils\Authenticator;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Auth
 {
+    /**
+     * Will throw an exception if the user is not authenticated,
+     * or he is authenticated but is not an admin.
+     * 
+     * @param \string $message  The message sent to user in case the user
+     *                          is not an admin.
+     * 
+     * @return array an associative array containing all fields of the row
+     * in table `users` that corresponds to the authenticated user.
+     */
+    public static function assertAdmin(Request $request, ?string $message = null): array
+    {
+        $token = self::extractTokenFromRequest($request);
+        $user = Authenticator::verifyToken($token);
+        if (!$user['is_admin']) {
+            throw new AccessDeniedException($message ?? 'You must be an admin to perform this action.');
+        }
+        return $user;
+    }
+
     /**
      * Will throw an exception if the user is not authenticated.
      * 

@@ -32,7 +32,7 @@ class UserController extends AbstractController
     #[Route('/{userId<\d+>}', name: 'update', methods: ['PUT'])]
     public function updateUser(Request $request, string $userId): JsonResponse
     {
-        $user = Auth::assertAdmin($request, 'You cannot change information of another user.');
+        $user = Auth::assert($request, 'You cannot change information of another user.');
         $data = json_decode($request->getContent(), true);
 
         $availableFields = Validator::validateUserUpdate_AllAreOptional($data);

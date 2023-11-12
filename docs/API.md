@@ -225,7 +225,28 @@ The following object schemas are listed in their alphabetical order.
 
 ### GenreInfo
 
+```json
+{
+    "success": true,
+    "id": 234,
+    "name": "Classical",
+    "added_at": "When was this genre added. See notes about datetimes.",
+    "updated_at": "When was this genre last updated. See notes about datetimes.",
+    "added_by": "ID of the user that added this genre",
+    "updated_by": "ID of the user that last updated this genre"
+}
+```
+
 ### GenreUpdate
+
+```json
+{
+    "name": "Classical Music",
+}
+```
+
+When adding a new genre, all the fields are required.
+Otherwise, specify the updated fields only.
 
 ### PlaylistInfo
 

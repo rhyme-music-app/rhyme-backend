@@ -5,6 +5,20 @@ use App\Utils\Exception\ValidationException;
 
 class Validator
 {
+    private static $specs_GenreUpdate = [
+        'name' => 'genres.name',
+    ];
+    
+    public static function validateGenreUpdate_AllMustPresent(array $array, ?string $message = null): void
+    {
+        /*return*/ self::validateArray_AllMustPresent($array, self::$specs_GenreUpdate, $message);
+    }
+
+    public static function validateGenreUpdate_AllAreOptional(array $array, ?string $message = null): array
+    {
+        return self::validateArray_AllAreOptional($array, self::$specs_GenreUpdate, $message);
+    }
+
     private static $specs_UserUpdate = [
         'email' => 'users.email',
         'password' => 'users.password',

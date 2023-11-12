@@ -2,8 +2,8 @@
 namespace App\Middleware;
 
 use App\Utils\Authenticator;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Auth
@@ -23,7 +23,7 @@ class Auth
         $token = self::extractTokenFromRequest($request);
         $user = Authenticator::verifyToken($token);
         if (!$user['is_admin']) {
-            throw new AccessDeniedException($message ?? 'You must be an admin to perform this action.');
+            throw new AccessDeniedHttpException($message ?? 'You must be an admin to perform this action.');
         }
         return $user;
     }

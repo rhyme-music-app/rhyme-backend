@@ -36,7 +36,7 @@ class NormalizedJsonResponse extends JsonResponse
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                $value = self::replaceAllPHPDateTimeWithString($value);
+                self::replaceAllPHPDateTimeWithString($value);
             } else if ($value instanceof DateTime) {
                 $value = DateTimeUtils::convertPHPDateTimeToJSDateString($value);
             } else {
@@ -44,5 +44,6 @@ class NormalizedJsonResponse extends JsonResponse
             }
             $data[$key] = $value;
         }
+        return $data;
     }
 }

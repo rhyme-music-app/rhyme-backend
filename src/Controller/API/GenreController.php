@@ -6,6 +6,7 @@ use App\Middleware\Auth;
 use App\Utils\DatabaseConnection;
 use App\Utils\QueryParam;
 use App\Utils\Response\GenreInfoResponse;
+use App\Utils\Response\ListResponse;
 use App\Utils\Response\NormalizedJsonResponse;
 use App\Utils\Validator;
 use DateTime;
@@ -17,12 +18,29 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/genres', name: 'genres_')]
 class GenreController extends AbstractController
 {
-    #[Route('/{genreId<\d+>}', name: 'index', methods: ['GET'])]
-    public function index(string $genreId): JsonResponse
+    /**
+     * Route 1
+     */
+    #[Route(['', '/'], name: 'index', methods: ['GET'])]
+    public function indexGenres(): JsonResponse
+    {
+        return new ListResponse('genres', [
+            'id', 'name', 'added_at', 'updated_at', 'added_by', 'updated_by'
+        ]);
+    }
+
+    /**
+     * Route 2
+     */
+    #[Route('/{genreId<\d+>}', name: 'read', methods: ['GET'])]
+    public function getGenre(string $genreId): JsonResponse
     {
         return new GenreInfoResponse($genreId);
     }
 
+    /**
+     * Route 3
+     */
     #[Route(['', '/'], name: 'add', methods: ['POST'])]
     public function addGenre(Request $request): JsonResponse
     {
@@ -47,6 +65,9 @@ class GenreController extends AbstractController
         return new GenreInfoResponse(DatabaseConnection::lastInsertId());
     }
 
+    /**
+     * Route 4
+     */
     #[Route('/{genreId<\d+>}', name: 'update', methods: ['PUT'])]
     public function updateGenre(Request $request, string $genreId): JsonResponse
     {
@@ -79,6 +100,9 @@ class GenreController extends AbstractController
         return new GenreInfoResponse($genreId);
     }
 
+    /**
+     * Route 5
+     */
     #[Route('/{genreId<\d+>}', name: 'delete', methods: ['DELETE'])]
     public function deleteGenre(Request $request, string $genreId): JsonResponse
     {

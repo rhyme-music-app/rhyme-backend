@@ -38,6 +38,7 @@ class HomeController extends AbstractController
         <!DOCTYPE html>
         <html>
             <head>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
                 <style>
                     .heading-permalink {
                         color: transparent;
@@ -68,9 +69,16 @@ class HomeController extends AbstractController
                         /*Fonts used by GitHub repo pages*/
                         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
                     }
+
+                    pre, code, pre > *, pre > code > *, code > * {
+                        font-family: Consolas, monospace;
+                    }
                 </style>
             </head>
             <body>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+
                 <div style="color: red; font-size: 20; font-family: Consolas;">
                     <h1>FOR ADMINISTRATORS ONLY</h1>
 
@@ -97,6 +105,7 @@ class HomeController extends AbstractController
         ' . (
             file_get_contents(__DIR__ . '/home.js') ?: 'alert("Error: home.js could not be loaded")'
         ) . '
+                    hljs.highlightAll();
                 </script>
             </body>
         </html>';

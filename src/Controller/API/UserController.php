@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Middleware\Auth;
 use App\Utils\DatabaseConnection;
 use App\Utils\QueryParam;
+use App\Utils\Response\ListResponse;
 use App\Utils\Response\NormalizedJsonResponse;
 use App\Utils\Response\UserInfoResponse;
 use App\Utils\Validator;
@@ -17,18 +18,38 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/users', name: 'users_')]
 class UserController extends AbstractController
 {
-    #[Route('/{userId<\d+>}', name: 'index', methods: ['GET'])]
+    /**
+     * Route 1
+     */
+    #[Route(['', '/'], name: 'index', methods: ['GET'])]
+    public function indexUsers(): JsonResponse
+    {
+        return new ListResponse('users', [
+            'id', 'email', 'name', 'is_admin', 'deleted'
+        ]);
+    }
+
+    /**
+     * Route 2
+     */
+    #[Route('/{userId<\d+>}', name: 'get', methods: ['GET'])]
     public function getUserInfo(string $userId): JsonResponse
     {
         return new UserInfoResponse($userId);
     }
 
+    /**
+     * Route 3
+     */
     #[Route(['', '/', '/signup'], name: 'register', methods: ['POST'])]
     public function registerUser(Request $request): JsonResponse
     {
         return AuthController::_internal_register($request);
     }
 
+    /**
+     * Route 4
+     */
     #[Route('/{userId<\d+>}', name: 'update', methods: ['PUT'])]
     public function updateUser(Request $request, string $userId): JsonResponse
     {
@@ -64,6 +85,9 @@ class UserController extends AbstractController
         return new UserInfoResponse($userId);
     }
 
+    /**
+     * Route 5
+     */
     #[Route('/{userId<\d+>}', name: 'delete', methods: ['DELETE'])]
     public function deleteUser(Request $request, string $userId): JsonResponse
     {

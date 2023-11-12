@@ -64,18 +64,34 @@
 
 ### User API
 
-1. **GET /api/users/{user_id}**
+1. **GET /api/users**
+
+    Returns a list of all users in the system.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`UserInfo`](#userinfo)
+        objects.
+
+2. **GET /api/users/{user_id}**
 
     Returns information of a user, given their ID.
 
      - Empty payload.
      - Response on success: [`UserInfo`](#userinfo).
 
-2. **POST /api/users/signup** OR **POST /users**
+3. **POST /api/users/signup** OR **POST /users**
 
     Same as `/api/auth/register`.
 
-3. **PUT AUTH /api/users/{user_id}**
+4. **PUT AUTH /api/users/{user_id}**
 
     Updates information of a user, given their ID and the updated information.
 
@@ -84,7 +100,7 @@
      - Payload: [`UserUpdate`](#userupdate).
      - Response on success: [`UserInfo`](#userinfo).
 
-4. **DELETE AUTH /api/users/{user_id}**
+5. **DELETE AUTH /api/users/{user_id}**
 
     Deregisters, or deletes a user account, given their ID.
 
@@ -95,11 +111,75 @@
      - Empty payload.
      - Empty response on success.
 
+6. **GET AUTH /api/users/{user_id}/favorite/playlists**
+
+    Retrieves a list of this user's favorite playlists.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`PlaylistInfo`](#playlistinfo)
+        objects.
+
+7. **POST AUTH /api/users/{user_id}/favorite/playlists/{playlist_id}**
+
+    Marks an existing playlist as one of the user's favorites.
+
+     - Empty payload.
+     - Empty response on success.
+
+8. **DELETE AUTH /api/users/{user_id}/favorite/playlists/{playlist_id}**
+
+    Removes a playlist from the user's favorite list.
+
+     - Empty payload.
+     - Empty response on success.
+
+9. **GET AUTH /api/users/{user_id}/favorite/songs**
+
+    Retrieves a list of this user's favorite songs.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`SongInfo`](#songinfo)
+        objects.
+
+10. **POST AUTH /api/users/{user_id}/favorite/songs/{song_id}**
+
+    Marks an existing song as one of the user's favorites.
+
+     - Empty payload.
+     - Empty response on success.
+
+11. **DELETE AUTH /api/users/{user_id}/favorite/songs/{song_id}**
+
+    Removes a song from the user's favorite list.
+
+     - Empty payload.
+     - Empty response on success.
+
 ### Playlist API
 
-1. **GET /api/playlists/{playlist_id}**
+1. **GET \[AUTH\] /api/playlists/{playlist_id}**
 
-    Returns information of a playlist, given its ID. If the playlist is not owned by the currently-authenticated user, then it must be public.
+    Returns information of a playlist, given its ID.
+
+    If the playlist is not public, only the authenticated user
+    who owns it can access its information. See details about
+    playlist ownership in [`PlaylistInfo`](#playlistinfo).
 
      - Empty payload.
      - Response on success: [`PlaylistInfo`](#playlistinfo).
@@ -113,42 +193,108 @@
 
 3. **PUT AUTH /api/playlists/{playlist_id}**
 
-    Updates an existing playlist, given its ID. The playlist must be owned by the currently-authenticated user, with one exception: an admin can change playlists of anyone, regardless of whether the playlists are public or private.
+    Updates an existing playlist, given its ID.
+
+    Only the authenticated user who owns the playlist can
+    modify it. See details about playlist ownership in
+    [`PlaylistInfo`](#playlistinfo).
 
      - Payload: [`PlaylistUpdate`](#playlistupdate).
      - Response on success: [`PlaylistInfo`](#playlistinfo).
 
 4. **DELETE AUTH /api/playlists/{playlist_id}**
 
-    Deletes an existing playlist, given its ID. Same restrictions as PUT method above are applied here.
+    Deletes an existing playlist, given its ID.
+
+    Only the authenticated user who owns the playlist can
+    delete it. See details about playlist ownership in
+    [`PlaylistInfo`](#playlistinfo).
+
+     - Empty payload.
+     - Empty response on success.
+
+5. **GET \[AUTH\] /api/playlists/{playlist_id}/songs**
+
+    Retrieves all of this playlist's songs.
+
+    If the playlist is not public, only the authenticated user
+    who owns it can access its information. See details about
+    playlist ownership in [`PlaylistInfo`](#playlistinfo).
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`SongInfo`](#songinfo)
+        objects.
+
+6. **POST AUTH /api/playlists/{playlist_id}/songs/{song_id}**
+
+    Adds a song to an existing playlist.
+
+    Only the authenticated user who owns the playlist can
+    modify it. See details about playlist ownership in
+    [`PlaylistInfo`](#playlistinfo).
+
+     - Empty payload.
+     - Empty response on success.
+
+7. **DELETE AUTH /api/playlists/{playlist_id}/songs/{song_id}**
+
+    Removes a song from an existing playlist.
+
+    Only the authenticated user who owns the playlist can
+    modify it. See details about playlist ownership in
+    [`PlaylistInfo`](#playlistinfo).
 
      - Empty payload.
      - Empty response on success.
 
 ### Genre API
 
-1. **GET /api/genres/{genre_id}**
+1. **GET /api/genres**
+
+    Returns names of all genres available in the system.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ "..." ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`GenreInfo`](#genreinfo)
+        objects.
+
+2. **GET /api/genres/{genre_name}**
 
     Returns information of a genre.
 
      - Empty payload.
      - Response on success: [`GenreInfo`](#genreinfo).
 
-2. **POST AUTH ADMIN /api/genres**
+3. **POST AUTH ADMIN /api/genres**
 
     Creates a new genre.
 
      - Payload: [`GenreUpdate`](#genreupdate).
      - Response on success: [`GenreInfo`](#genreinfo).
 
-3. **PUT AUTH ADMIN /api/genres/{genre_id}**
+4. **PUT AUTH ADMIN /api/genres/{genre_name}**
 
     Updates an existing genre.
 
      - Payload: [`GenreUpdate`](#genreupdate).
      - Response on success: [`GenreInfo`](#genreinfo).
 
-4. **DELETE AUTH ADMIN /api/genres/{genre_id}**
+5. **DELETE AUTH ADMIN /api/genres/{genre_name}**
 
     Deletes an existing genre.
 
@@ -215,20 +361,109 @@
      - Empty payload.
      - Empty response on success.
 
+5. **GET /api/songs/{song_id}/listen**
+
+    Returns information of the song, and increment its stream count.
+
+     - Empty payload.
+     - Response on success: [`SongInfo`](#songinfo).
+
+6. **GET /api/songs/{song_id}/artists**
+
+    Retrieves a list of this song's artists.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`ArtistInfo`](#artistinfo)
+        objects.
+
+7. **POST AUTH /api/songs/{song_id}/artists/{artist_id}**
+
+    Adds an artist to this song's list of artists.
+
+     - Empty payload.
+     - Empty response on success.
+
+8. **DELETE AUTH /api/songs/{song_id}/artists/{artist_id}**
+
+    Removes an artist from this song's list of artists.
+
+     - Empty payload.
+     - Empty response on success.
+
+9. **GET /api/songs/{song_id}/genres**
+
+    Retrieves a list of this song's genres.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`GenreInfo`](#genreinfo)
+        objects.
+
+10. **POST AUTH /api/songs/{song_id}/genres/{genre_name}**
+
+    Adds a genre to this song's list of genres.
+
+     - Empty payload.
+     - Empty response on success.
+
+11. **DELETE AUTH /api/songs/{song_id}/genres/{genre_name}**
+
+    Removes a genre from this song's list of gerres.
+
+     - Empty payload.
+     - Empty response on success.
+
 ## JSON Object Schemas
 
 The following object schemas are listed in their alphabetical order.
 
 ### ArtistInfo
 
+```json
+{
+    "success": true,
+    "id": "123",
+    "name": "Frederic Chopin",
+    "type": "composer",
+    "added_at": "When was this artist added. See notes about datetimes.",
+    "updated_at": "When was this artist last updated. See notes about datetimes.",
+    "added_by": "ID of the user that added this artist",
+    "updated_by": "ID of the user that last updated this artist"
+}
+```
+
 ### ArtistUpdate
+
+```json
+{
+    "name": "Alan Walker",
+    "type": "One of the following values: singer, rapper, composer, dj, producer, pianist, violinist"
+}
+```
+
+When adding a new artist, all the fields are required.
+Otherwise, specify the updated fields only.
 
 ### GenreInfo
 
 ```json
 {
     "success": true,
-    "id": 234,
     "name": "Classical",
     "added_at": "When was this genre added. See notes about datetimes.",
     "updated_at": "When was this genre last updated. See notes about datetimes.",
@@ -241,7 +476,7 @@ The following object schemas are listed in their alphabetical order.
 
 ```json
 {
-    "name": "Classical Music",
+    "name": "Classical Music"
 }
 ```
 
@@ -250,11 +485,51 @@ Otherwise, specify the updated fields only.
 
 ### PlaylistInfo
 
+```json
+{
+    "success": true,
+    "id": 3003,
+    "name": "My Playlist",
+    "owned_by": "ID of the user that added this playlist, which is also the only one that could update it",
+    "is_public": true, // or false
+    "added_at": "When was this playlist added. See notes about datetimes.",
+    "updated_at": "When was this playlist last updated. See notes about datetimes."
+}
+```
+
 ### PlaylistUpdate
+
+```json
+{
+    "name": "Our Playlist",
+    "is_public": false // or true
+}
+```
 
 ### SongInfo
 
+```json
+{
+    "success": true,
+    "id": "123456",
+    "name": "Happy Birthday",
+    "audio_link": "A link that can be embedded into <audio> HTML tag",
+    "added_at": "When was this song added. See notes about datetimes.",
+    "updated_at": "When was this song last updated. See notes about datetimes.",
+    "added_by": "ID of the user that added this song",
+    "updated_by": "ID of the user that last updated this song",
+    "streams": 15000
+}
+```
+
 ### SongUpdate
+
+```json
+{
+    "name": "Happy Birthday to You",
+    "audio_link": "See SongInfo",
+}
+```
 
 ### UserInfo
 

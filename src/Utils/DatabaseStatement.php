@@ -59,6 +59,6 @@ class DatabaseStatement
      */
     public function fetchAll()
     {
-        return $this->stmt->fetch(...func_get_args());
+        return $this->stmt->fetchAll();
     }
 }

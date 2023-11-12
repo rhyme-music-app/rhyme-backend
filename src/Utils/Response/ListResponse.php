@@ -8,8 +8,17 @@ class ListResponse extends NormalizedJsonResponse
 {
     public static function selectAllFromOneTable(string $table, array $fieldsToSelect): ListResponse
     {
+        return self::selectFromOneTableWithCommandTail($table, $fieldsToSelect, 'WHERE 1');
+    }
+
+    /**
+     * Do NOT embed user input into $commandTail without validation
+     * to prevent SQL Injection attack.
+     */
+    public static function selectFromOneTableWithCommandTail(string $table, array $fieldsToSelect, string $commandTail): ListResponse
+    {
         $fieldList = implode(', ', $fieldsToSelect);
-        $stmt = DatabaseConnection::prepare("SELECT $fieldList FROM $table WHERE 1;");
+        $stmt = DatabaseConnection::prepare("SELECT $fieldList FROM $table $commandTail;");
         return new ListResponse($stmt, $fieldsToSelect);
     }
 

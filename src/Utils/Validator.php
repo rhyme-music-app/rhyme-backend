@@ -5,6 +5,21 @@ use App\Utils\Exception\ValidationException;
 
 class Validator
 {
+    private static $specs_PlaylistUpdate = [
+        'name' => 'playlists.name',
+        'is_public' => 'playlists.is_public'
+    ];
+
+    public static function validatePlaylistUpdate_AllMustPresent(array $array, ?string $message = null): void
+    {
+        /*return*/ self::validateArray_AllMustPresent($array, self::$specs_PlaylistUpdate, $message);
+    }
+
+    public static function validatePlaylistUpdate_AllAreOptional(array $array, ?string $message = null): array
+    {
+        return self::validateArray_AllAreOptional($array, self::$specs_PlaylistUpdate, $message);
+    }
+
     private static $specs_SongUpdate = [
         'name' => 'songs.name',
         'audio_link' => 'songs.audio_link'
@@ -116,6 +131,7 @@ class Validator
             case 'artists.name':
             case 'artists.type': // TODO: artists.type is an enum, not an arbitrary string !
             case 'songs.name':
+            case 'playlists.name':
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 break;
 
@@ -123,6 +139,12 @@ class Validator
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 if (!filter_var($value, FILTER_VALIDATE_URL)) {
                     throw new ValidationException($keyName, 'is invalid', $message);
+                }
+                break;
+            
+            case 'playlists.is_public':
+                if (!($value === true || $value === false)) {
+                    throw new ValidationException($keyName, 'must be a boolean', $message);
                 }
                 break;
         }

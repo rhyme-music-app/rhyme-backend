@@ -173,7 +173,33 @@
 
 ### Playlist API
 
-1. **GET \[AUTH\] /api/playlists/{playlist_id}**
+1. **GET /api/playlists**
+
+    Returns a list of all playlists in the system that the
+    currently-authenticated user has the right to access.
+
+    If the user has not logged in: only public playlists
+    are returned.
+
+    If the user has logged in: only public playlists and
+    all of his playlists are returned.
+
+    In neither case will other users' private playlists
+    be returned.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`PlaylistInfo`](#playlistinfo)
+        objects.
+
+2. **GET /api/playlists/{playlist_id}**
 
     Returns information of a playlist, given its ID.
 
@@ -184,14 +210,14 @@
      - Empty payload.
      - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-2. **POST AUTH /api/playlists**
+3. **POST AUTH /api/playlists**
 
     Creates a new playlist.
 
      - Payload: [`PlaylistUpdate`](#playlistupdate).
      - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-3. **PUT AUTH /api/playlists/{playlist_id}**
+4. **PUT AUTH /api/playlists/{playlist_id}**
 
     Updates an existing playlist, given its ID.
 
@@ -202,7 +228,7 @@
      - Payload: [`PlaylistUpdate`](#playlistupdate).
      - Response on success: [`PlaylistInfo`](#playlistinfo).
 
-4. **DELETE AUTH /api/playlists/{playlist_id}**
+5. **DELETE AUTH /api/playlists/{playlist_id}**
 
     Deletes an existing playlist, given its ID.
 
@@ -213,7 +239,7 @@
      - Empty payload.
      - Empty response on success.
 
-5. **GET \[AUTH\] /api/playlists/{playlist_id}/songs**
+6. **GET /api/playlists/{playlist_id}/songs**
 
     Retrieves all of this playlist's songs.
 
@@ -233,7 +259,7 @@
         where `[ ... ]` is a list of [`SongInfo`](#songinfo)
         objects.
 
-6. **POST AUTH /api/playlists/{playlist_id}/songs/{song_id}**
+7. **POST AUTH /api/playlists/{playlist_id}/songs/{song_id}**
 
     Adds a song to an existing playlist.
 
@@ -244,7 +270,7 @@
      - Empty payload.
      - Empty response on success.
 
-7. **DELETE AUTH /api/playlists/{playlist_id}/songs/{song_id}**
+8. **DELETE AUTH /api/playlists/{playlist_id}/songs/{song_id}**
 
     Removes a song from an existing playlist.
 
@@ -303,28 +329,44 @@
 
 ### Artist API
 
-1. **GET /api/artists/{artist_id}**
+1. **GET /api/artists**
+
+    Returns a list of all artists available in the system.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`ArtistInfo`](#artistinfo)
+        objects.
+
+2. **GET /api/artists/{artist_id}**
 
     Returns information of an artist, given their ID.
 
      - Empty payload.
      - Response on success: [`ArtistInfo`](#artistinfo).
 
-2. **POST AUTH ADMIN /api/artists**
+3. **POST AUTH ADMIN /api/artists**
 
     Adds a new artist.
 
      - Payload: [`ArtistUpdate`](#artistupdate).
      - Response on success: [`ArtistInfo`](#artistinfo).
 
-3. **PUT AUTH ADMIN /api/artists/{artist_id}**
+4. **PUT AUTH ADMIN /api/artists/{artist_id}**
 
     Updates an existing artist.
 
     - Payload: [`ArtistUpdate`](#artistupdate).
     - Response on success: [`ArtistInfo`](#artistinfo).
 
-4. **DELETE AUTH ADMIN /api/artists/{artist_id}**
+5. **DELETE AUTH ADMIN /api/artists/{artist_id}**
 
     Deletes an existing artist.
 
@@ -333,42 +375,58 @@
 
 ### Song API
 
-1. **GET /api/songs/{song_id}**
+1. **GET /api/songs**
+
+    Returns a list of all songs in the system.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`SongInfo`](#songinfo)
+        objects.
+
+2. **GET /api/songs/{song_id}**
 
     Returns information of a song. Do not increment streams.
 
      - Empty payload.
      - Response on success: [`SongInfo`](#songinfo).
 
-2. **POST AUTH ADMIN /api/songs**
+3. **POST AUTH ADMIN /api/songs**
 
     Adds a new song.
 
      - Payload: [`SongUpdate`](#songupdate).
      - Response on success: [`SongInfo`](#songinfo).
 
-3. **PUT AUTH ADMIN /api/songs/{song_id}**
+4. **PUT AUTH ADMIN /api/songs/{song_id}**
 
     Updates information of a song.
 
      - Payload: [`SongUpdate`](#songupdate).
      - Response on success: [`SongInfo`](#songinfo).
 
-4. **DELETE AUTH ADMIN /api/songs/{song_id}**
+5. **DELETE AUTH ADMIN /api/songs/{song_id}**
 
     Deletes a song.
 
      - Empty payload.
      - Empty response on success.
 
-5. **GET /api/songs/{song_id}/listen**
+6. **GET /api/songs/{song_id}/listen**
 
     Returns information of the song, and increment its stream count.
 
      - Empty payload.
      - Response on success: [`SongInfo`](#songinfo).
 
-6. **GET /api/songs/{song_id}/artists**
+7. **GET /api/songs/{song_id}/artists**
 
     Retrieves a list of this song's artists.
 
@@ -384,21 +442,21 @@
         where `[ ... ]` is a list of [`ArtistInfo`](#artistinfo)
         objects.
 
-7. **POST AUTH /api/songs/{song_id}/artists/{artist_id}**
+8. **POST AUTH /api/songs/{song_id}/artists/{artist_id}**
 
     Adds an artist to this song's list of artists.
 
      - Empty payload.
      - Empty response on success.
 
-8. **DELETE AUTH /api/songs/{song_id}/artists/{artist_id}**
+9. **DELETE AUTH /api/songs/{song_id}/artists/{artist_id}**
 
     Removes an artist from this song's list of artists.
 
      - Empty payload.
      - Empty response on success.
 
-9. **GET /api/songs/{song_id}/genres**
+10. **GET /api/songs/{song_id}/genres**
 
     Retrieves a list of this song's genres.
 
@@ -414,14 +472,14 @@
         where `[ ... ]` is a list of [`GenreInfo`](#genreinfo)
         objects.
 
-10. **POST AUTH /api/songs/{song_id}/genres/{genre_name}**
+11. **POST AUTH /api/songs/{song_id}/genres/{genre_name}**
 
     Adds a genre to this song's list of genres.
 
      - Empty payload.
      - Empty response on success.
 
-11. **DELETE AUTH /api/songs/{song_id}/genres/{genre_name}**
+12. **DELETE AUTH /api/songs/{song_id}/genres/{genre_name}**
 
     Removes a genre from this song's list of gerres.
 

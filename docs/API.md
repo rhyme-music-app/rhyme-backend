@@ -115,6 +115,9 @@
 
     Retrieves a list of this user's favorite playlists.
 
+    The specified user must be the currently-authenticated
+    user.
+
      - Empty payload.
      - Response on success:
 
@@ -131,6 +134,9 @@
 
     Marks an existing playlist as one of the user's favorites.
 
+    The specified user must be the currently-authenticated
+    user.
+
      - Empty payload.
      - Empty response on success.
 
@@ -138,12 +144,18 @@
 
     Removes a playlist from the user's favorite list.
 
+    The specified user must be the currently-authenticated
+    user.
+
      - Empty payload.
      - Empty response on success.
 
 9. **GET AUTH /api/users/{user_id}/favorite/songs**
 
     Retrieves a list of this user's favorite songs.
+
+    The specified user must be the currently-authenticated
+    user.
 
      - Empty payload.
      - Response on success:
@@ -161,6 +173,9 @@
 
     Marks an existing song as one of the user's favorites.
 
+    The specified user must be the currently-authenticated
+    user.
+
      - Empty payload.
      - Empty response on success.
 
@@ -168,8 +183,32 @@
 
     Removes a song from the user's favorite list.
 
+    The specified user must be the currently-authenticated
+    user.
+
      - Empty payload.
      - Empty response on success.
+
+12. **GET /api/users/{user_id}/own/playlists**
+
+    If the specified user is the currently-authenticated
+    user: returns all playlists that the user has
+    created.
+
+    Otherwise: returns only the playlists that the user
+    has created **AND IS PUBLIC**.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`PlaylistInfo`](#playlistinfo)
+        objects.
 
 ### Playlist API
 

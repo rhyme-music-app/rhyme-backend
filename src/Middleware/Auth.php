@@ -4,10 +4,32 @@ namespace App\Middleware;
 use App\Utils\Authenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Auth
 {
+    /**
+     * This function tries to retrieve the
+     * currently-authenticated user, and
+     * returns his information as an associative
+     * array.
+     * 
+     * Unlike `Auth::assert`, if the user has not
+     * logged in yet, this function simply returns
+     * `null` instead of raising an exception.
+     */
+    public static function getUserNoException(Request $request): array|null
+    {
+        $user = null;
+        try {
+            $user = Auth::assert($request);
+        } catch (HttpException $e) {
+            // let $user be null still
+        }
+        return $user;
+    }
+
     /**
      * Will throw an exception if the user is not authenticated,
      * or he is authenticated but is not an admin.

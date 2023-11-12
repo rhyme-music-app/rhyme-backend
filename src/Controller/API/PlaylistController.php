@@ -22,30 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaylistController extends AbstractController
 {
     /**
-     * This function tries to retrieve the
-     * currently-authenticated user, and
-     * returns his information as an associative
-     * array.
-     * 
-     * Unlike `Auth::assert`, if the user has not
-     * logged in yet, this function simply returns
-     * `null` instead of raising an exception.
-     */
-    private static function getUserNoException(Request $request): array|null
-    {
-        $user = null;
-        try {
-            $user = Auth::assert($request);
-        } catch (HttpException $e) {}
-        return $user;
-    }
-    /**
      * Route 1
      */
     #[Route(['', '/'], name: 'index', methods: ['GET'])]
     public function indexPlaylists(Request $request): JsonResponse
     {
-        $user = self::getUserNoException($request);
+        $user = Auth::getUserNoException($request);
 
         return ListResponse::selectFromOneTableWithCommandTail('playlists', [
             'id', 'name', 'owned_by', 'is_public',
@@ -63,7 +45,7 @@ class PlaylistController extends AbstractController
     #[Route('/{playlistId<\d+>}', name: 'get', methods: ['GET'])]
     public function getPlaylist(Request $request, string $playlistId): JsonResponse
     {
-        $user = self::getUserNoException($request);
+        $user = Auth::getUserNoException($request);
 
         return new PlaylistInfoResponse($playlistId, $user);
     }
@@ -149,7 +131,7 @@ class PlaylistController extends AbstractController
     #[Route('/{playlistId<\d+>}/songs', name: 'get_songs', methods: ['GET'])]
     public function getPlaylistSongs(Request $request, string $playlistId): JsonResponse
     {
-        $user = self::getUserNoException($request);
+        $user = Auth::getUserNoException($request);
         $playlist = PlaylistAccess::assertViewer($playlistId, $user);
 
         $songFields = [

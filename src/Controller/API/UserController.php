@@ -36,29 +36,26 @@ class UserController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $availableFields = Validator::validateUserUpdate_AllAreOptional($data);
-        $updates = [];
         if (!empty($availableFields)) {
+            $updates = [];
             if (in_array('password', $availableFields)) {
                 $passwordHash = password_hash($data['password'], PASSWORD_BCRYPT);
-                $updates['password_hash'] = $passwordHash;
+                $updates['password_hash'] = [
+                    'value' => $passwordHash,
+                    'type' => QueryParam::STR,
+                ];
                 // Remove 'password_hash' from available fields.
                 unset($availableFields[array_search('password', $availableFields)]);
             }
             // Iterate over the available fields (except 'password')
             foreach ($availableFields as $field) {
-                $updates[$field] = $data[$field];
+                $updates[$field] = [
+                    'value' => $data[$field],
+                    'type' => QueryParam::STR,
+                ];
             }
             // Run SQL update
-            $stmt = DatabaseConnection::prepare('UPDATE users SET ' . implode(', ',
-                array_map(
-                    fn ($field) => "$field = :$field",
-                    array_keys($updates)
-                )
-            ) . ' WHERE id = :userId');
-            foreach ($updates as $field => &$value) {
-                $stmt->bindParam(":$field", $value, QueryParam::STR);
-            }
-            $stmt->bindParam(':userId', $userId, QueryParam::STR);
+            $stmt = DatabaseConnection::prepareUpdateAndBind('users', $userId, $updates);
             $stmt->execute();
         }
 

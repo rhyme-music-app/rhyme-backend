@@ -17,6 +17,47 @@ class DatabaseConnection
         return new DatabaseStatement(self::$conn->prepare($sqlWithParams));
     }
 
+    /**
+     * Returns a statement that can be executed directly to update
+     * one row in a table.
+     * 
+     * @param \string $tableName    e.g. users.
+     * @param \string $id           The ID of the row to update.
+     * @param \array $updates       An array of the form:
+     * ```php
+     * [
+     *     'the_field_name' => [
+     *         'value' => 'the_value_of_the_field',
+     *         'type' => 'QueryParam::STR or QueryParam::xxx',
+     *     ],
+     *     // For example:
+     *     'name' => [
+     *         'value' => 'My New Name',
+     *         'type' => QueryParam::STR,
+     *     ],
+     *     'updatedAt' => [
+     *         'value' => new DateTime(),
+     *         'type' => QueryParam::DATETIME,
+     *     ],
+     * ]
+     * ```
+     */
+    public static function prepareUpdateAndBind(string $tableName, string $id, array $updates): DatabaseStatement
+    {
+        $stmt = self::prepare("UPDATE $tableName SET " . implode(', ',
+            array_map(
+                fn (string $field) => "$field = :$field",
+                array_keys($updates)
+            )
+        ) . ' WHERE id = :id');
+        foreach ($updates as $field => &$spec) {
+            $value = &$spec['value'];
+            $stmt->bindParam(":$field", $value, $spec['type']);
+        }
+        $stmt->bindParam(':id', $id, QueryParam::STR);
+        return $stmt;
+    }
+
     public static function lastInsertId(): string|null
     {
         self::prepareConnection();

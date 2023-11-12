@@ -5,6 +5,20 @@ use App\Utils\Exception\ValidationException;
 
 class Validator
 {
+    private static $specs_ArtistUpdate = [
+        'name' => 'artists.name',
+        'type' => 'artists.type'
+    ];
+
+    public static function validateArtistUpdate_AllMustPresent(array $array, ?string $message = null): void
+    {
+        /*return*/ self::validateArray_AllMustPresent($array, self::$specs_ArtistUpdate, $message);
+    }
+
+    public static function validateArtistUpdate_AllAreOptional(array $array, ?string $message = null): array {
+        return self::validateArray_AllAreOptional($array, self::$specs_ArtistUpdate, $message);
+    }
+
     private static $specs_GenreUpdate = [
         'name' => 'genres.name',
     ];
@@ -82,6 +96,9 @@ class Validator
                 break;
             
             case 'users.name':
+            case 'genres.name':
+            case 'artists.name':
+            case 'artists.type': // TODO: artists.type is an enum, not an arbitrary string !
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 break;
         }

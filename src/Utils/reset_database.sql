@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS `rhyme`.`artists` ;
 
 CREATE TABLE IF NOT EXISTS `rhyme`.`artists` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` TEXT NOT NULL,
+  `name` VARCHAR(512) NOT NULL,
   `type` ENUM('singer', 'rapper', 'composer', 'dj', 'producer', 'pianist', 'violinist') NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`artists` (
   PRIMARY KEY (`id`),
   INDEX `fk_artists_users_id_idx` (`added_by` ASC) VISIBLE,
   INDEX `fk_artists_updated_by_users_id_idx` (`updated_by` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
   CONSTRAINT `fk_artists_added_by_users_id`
     FOREIGN KEY (`added_by`)
     REFERENCES `rhyme`.`users` (`id`)

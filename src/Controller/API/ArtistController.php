@@ -24,7 +24,7 @@ class ArtistController extends AbstractController
     #[Route(['', '/'], name: 'index', methods: ['GET'])]
     public function indexArtists(): JsonResponse
     {
-        return new ListResponse('artists', [
+        return ListResponse::selectAllFromOneTable('artists', [
             'id', 'name', 'type', 'added_at', 'updated_at', 'added_by', 'updated_by'
         ]);
     }
@@ -109,7 +109,7 @@ class ArtistController extends AbstractController
     {
         $user = Auth::assertAdmin($request, 'You cannot delete an artist if you are not an admin.');
 
-        $stmt = DatabaseConnection::prepare('DELETE FROM artists WHERE id = :artistId');
+        $stmt = DatabaseConnection::prepare('DELETE FROM artists WHERE id = :artistId;');
         $stmt->bindParam(':artistId', $artistId, QueryParam::STR);
         $stmt->execute();
 

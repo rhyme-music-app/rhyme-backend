@@ -45,7 +45,7 @@ class Authenticator
     public static function verifyAndRevokeToken(string $token): void
     {
         $tokenId = self::verifyTokenInternally($token)['tokenId'];
-        $stmt = DatabaseConnection::prepare('DELETE FROM tokens WHERE id = :tokenId');
+        $stmt = DatabaseConnection::prepare('DELETE FROM tokens WHERE id = :tokenId;');
         $stmt->bindParam(':tokenId', $tokenId, QueryParam::STR);
         $stmt->execute();
     }

@@ -24,7 +24,7 @@ class UserController extends AbstractController
     #[Route(['', '/'], name: 'index', methods: ['GET'])]
     public function indexUsers(): JsonResponse
     {
-        return new ListResponse('users', [
+        return ListResponse::selectAllFromOneTable('users', [
             'id', 'email', 'name', 'is_admin', 'deleted'
         ]);
     }
@@ -98,7 +98,7 @@ class UserController extends AbstractController
             }
         }
 
-        $stmt = DatabaseConnection::prepare('DELETE FROM users WHERE id = :userId');
+        $stmt = DatabaseConnection::prepare('DELETE FROM users WHERE id = :userId;');
         $stmt->bindParam(':userId', $userId, QueryParam::STR);
         $stmt->execute();
 

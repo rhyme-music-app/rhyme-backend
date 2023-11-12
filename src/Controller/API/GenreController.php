@@ -24,7 +24,7 @@ class GenreController extends AbstractController
     #[Route(['', '/'], name: 'index', methods: ['GET'])]
     public function indexGenres(): JsonResponse
     {
-        return new ListResponse('genres', [
+        return ListResponse::selectAllFromOneTable('genres', [
             'id', 'name', 'added_at', 'updated_at', 'added_by', 'updated_by'
         ]);
     }
@@ -108,7 +108,7 @@ class GenreController extends AbstractController
     {
         $user = Auth::assertAdmin($request, 'You cannot delete a genre if you are not an admin');
 
-        $stmt = DatabaseConnection::prepare('DELETE FROM genres WHERE id = :genreId');
+        $stmt = DatabaseConnection::prepare('DELETE FROM genres WHERE id = :genreId;');
         $stmt->bindParam(':genreId', $genreId, QueryParam::STR);
         $stmt->execute();
 

@@ -15,7 +15,7 @@ class PlaylistAccess
      * the specified playlist.
      * 
      * @param string      $playlistId  The ID of the playlist to consider.
-     * @param string      $user        The user array returned by functions of middleware Auth,
+     * @param null|array  $user        The user array returned by functions of middleware Auth,
      *                                 or `null` if the user is not authenticated.
      * @param null|string $message     The message sent to user in case the user
      *                                 is forbidden to view the playlist.
@@ -39,7 +39,7 @@ class PlaylistAccess
      * the specified playlist.
      * 
      * @param string      $playlistId  The ID of the playlist to consider.
-     * @param string      $user        The user array returned by functions of middleware Auth.
+     * @param array       $user        The user array returned by functions of middleware Auth.
      *                                 Unlike `assertViewer`, this parameter is mandatory.
      * @param null|string $message     The message sent to user in case the user
      *                                 is forbidden to edit the playlist.

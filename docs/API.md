@@ -442,14 +442,14 @@
         where `[ ... ]` is a list of [`ArtistInfo`](#artistinfo)
         objects.
 
-8. **POST AUTH /api/songs/{song_id}/artists/{artist_id}**
+8. **POST AUTH ADMIN /api/songs/{song_id}/artists/{artist_id}**
 
     Adds an artist to this song's list of artists.
 
      - Empty payload.
      - Empty response on success.
 
-9. **DELETE AUTH /api/songs/{song_id}/artists/{artist_id}**
+9. **DELETE AUTH ADMIN /api/songs/{song_id}/artists/{artist_id}**
 
     Removes an artist from this song's list of artists.
 
@@ -472,14 +472,14 @@
         where `[ ... ]` is a list of [`GenreInfo`](#genreinfo)
         objects.
 
-11. **POST AUTH /api/songs/{song_id}/genres/{genre_name}**
+11. **POST AUTH ADMIN /api/songs/{song_id}/genres/{genre_name}**
 
     Adds a genre to this song's list of genres.
 
      - Empty payload.
      - Empty response on success.
 
-12. **DELETE AUTH /api/songs/{song_id}/genres/{genre_name}**
+12. **DELETE AUTH ADMIN /api/songs/{song_id}/genres/{genre_name}**
 
     Removes a genre from this song's list of gerres.
 
@@ -522,6 +522,7 @@ Otherwise, specify the updated fields only.
 ```json
 {
     "success": true,
+    "id": 11,
     "name": "Classical",
     "added_at": "When was this genre added. See notes about datetimes.",
     "updated_at": "When was this genre last updated. See notes about datetimes.",

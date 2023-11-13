@@ -4,7 +4,8 @@
  */
 
 :root {
-    --charcoal: #36454f
+    --charcoal: #36454f;
+    --lightred: #ef4444;
 }
 
 * {
@@ -201,7 +202,7 @@ h3 {
     flex-shrink: 0;
     background-color: transparent;
 
-    border-radius: 40px;
+    border-radius: 0px;
     border: 2px solid black;
 
     color: black;
@@ -230,12 +231,21 @@ h3 {
 
 .button-primary {
     background: var(--charcoal);
-
     color: white;
 }
 
 .button-primary:hover, .button-primary:active {
-    background-color: black;
+    background: black;
+    color: white;
+}
+
+.button-danger {
+    background: var(--lightred);
+    color: white;
+}
+
+.button-danger:hover, .button-danger:active {
+    background: red;
     color: white;
 }
 

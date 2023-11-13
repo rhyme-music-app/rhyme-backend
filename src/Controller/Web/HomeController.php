@@ -2,21 +2,26 @@
 
 namespace App\Controller\Web;
 
+use App\Middleware\WebAuth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\Extension\Attributes\AttributesExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\MarkdownConverter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 #[Route('/', name: 'home_')]
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'index')]
-    public function index(): Response
+    #[Route('/', name: 'index', methods: ['GET'])]
+    public function index(Request $request): Response
     {
         // https://commonmark.thephpleague.com/2.4/extensions/heading-permalinks/
         $env = new Environment([
@@ -34,83 +39,62 @@ class HomeController extends AbstractController
         $converter = new MarkdownConverter($env);
 
         $md = $converter->convert(file_get_contents(__DIR__ . '/../../../docs/API.md'));
-        $md = '
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-                <style>
-                    .heading-permalink {
-                        color: transparent;
-                        text-decoration: none;
-                        padding-left: 5px;
-                    }
+        
+        return $this->render('index.html.twig', [
+            'markdownHtml' => $md,
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
 
-                    h1:hover .heading-permalink,
-                    h2:hover .heading-permalink,
-                    h3:hover .heading-permalink,
-                    h4:hover .heading-permalink,
-                    h5:hover .heading-permalink,
-                    h6:hover .heading-permalink,
-                    .heading-permalink:hover {
-                        text-decoration: underline;
-                        color: #777;
-                    }
+    #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
+    public function loginPage(Request $request): Response
+    {
+        $error = null;
+        $responseFixer = null;
 
-                    :target {
-                        animation: permalink-highlight 1s ease-out;
-                    }
+        if ($request->getMethod() == 'POST') {
+            try {
+                $responseFixer = WebAuth::login($request);
+                $response = new RedirectResponse('/dashboard');
+                $responseFixer($response);
+                return $response;
+            } catch (HttpException $e) {
+                $error = $e->getMessage();
+            }
+        }
 
-                    @keyframes permalink-highlight {
-                        from { background-color: yellow; }
-                    }
+        $response = $this->render('login.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request),
+            'error' => $error
+        ]);
+        if ($responseFixer !== null) {
+            $responseFixer($response);
+        }
+        return $response;
+    }
 
-                    * {
-                        /*Fonts used by GitHub repo pages*/
-                        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-                    }
+    #[Route('/dashboard', name: 'dashboard', methods: 'GET')]
+    public function dashboardPage(Request $request): Response
+    {
+        return $this->render('dashboard.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
 
-                    pre, code, pre > *, pre > code > *, code > * {
-                        font-family: Consolas, monospace;
-                    }
-                </style>
-            </head>
-            <body>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    #[Route('/logout', name: 'logout', methods: 'GET')]
+    public function logoutPage(Request $request): Response
+    {
+        try {
+            WebAuth::assertAndLogout($request);
+            // in case of log out error due to
+            // malformed/missing token:
+            // JUST IGNORE !
+        } catch (BadRequestHttpException $e) {
+            // ignore
+        } catch (UnauthorizedHttpException $e) {
+            // ignore
+        }
 
-                <div style="color: red; font-size: 20; font-family: Consolas;">
-                    <h1>FOR ADMINISTRATORS ONLY</h1>
-
-                    BE CAREFUL: Resetting the database will <b>ERASE ALL<br>
-                    EXISTING DATA</b> in the database !<br>
-                    However, <b>IF YOU ARE RUNNING THIS APP THE FIRST TIME,<br>
-                    RESET DATABASE NOW !</b><br>
-                    <br>
-                    To reset database, first go to your .env file, then<br>
-                    copy the string after the phrase <code>APP_SECRET=</code>,<br>
-                    paste into the following text box and click the button<br>
-                    below:<br>
-
-                    <label for="secret-input">APP_SECRET=</label>
-                    <input type="text" id="secret-input">
-                    <button id="reset-database-button" onclick="javascript:resetDatabase()">Reset database !</button>
-                </div>
-
-                <div id="markdown-area">
-        ' . $md . '
-                </div>
-
-                <script>
-        ' . (
-            file_get_contents(__DIR__ . '/home.js') ?: 'alert("Error: home.js could not be loaded")'
-        ) . '
-                    hljs.highlightAll();
-                </script>
-            </body>
-        </html>';
-        $res = new Response($md);
-        $res->headers->set('Content-Type', 'text/html');
-        return $res;
+        return new RedirectResponse('/');
     }
 }

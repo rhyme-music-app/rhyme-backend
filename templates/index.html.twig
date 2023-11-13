@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rhyme API Reference</title>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+        <style>
+            .heading-permalink {
+                color: transparent;
+                text-decoration: none;
+                padding-left: 5px;
+            }
+
+            h1:hover .heading-permalink,
+            h2:hover .heading-permalink,
+            h3:hover .heading-permalink,
+            h4:hover .heading-permalink,
+            h5:hover .heading-permalink,
+            h6:hover .heading-permalink,
+            .heading-permalink:hover {
+                text-decoration: underline;
+                color: #777;
+            }
+
+            :target {
+                animation: permalink-highlight 1s ease-out;
+            }
+
+            @keyframes permalink-highlight {
+                from { background-color: yellow; }
+            }
+
+            * {
+                /*Fonts used by GitHub repo pages*/
+                font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+            }
+
+            pre, code, pre > *, pre > code > *, code > * {
+                font-family: Consolas, monospace;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+
+        <a href="/dashboard">Go to Administrator Dashboard</a>
+
+        <div style="color: red; font-size: 20; font-family: Consolas;">
+            <h1>FOR ADMINISTRATORS ONLY</h1>
+
+            BE CAREFUL: Resetting the database will <b>ERASE ALL<br>
+            EXISTING DATA</b> in the database !<br>
+            However, <b>IF YOU ARE RUNNING THIS APP THE FIRST TIME,<br>
+            RESET DATABASE NOW !</b><br>
+            <br>
+            To reset database, first go to your .env file, then<br>
+            copy the string after the phrase <code>APP_SECRET=</code>,<br>
+            paste into the following text box and click the button<br>
+            below:<br>
+
+            <label for="secret-input">APP_SECRET=</label>
+            <input type="text" id="secret-input">
+            <button id="reset-database-button" onclick="javascript:resetDatabase()">Reset database !</button>
+        </div>
+
+        <div id="markdown-area">
+            {{ markdownHtml|raw }}
+        </div>
+
+        {{ include("components/_footer.html.twig") }}
+
+        <script>
+            hljs.highlightAll();
+
+            const secretInput = document.getElementById("secret-input");
+
+            function resetDatabase() {
+                fetch('/api/reset/database', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'APP_SECRET': secretInput.value ?? ''
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(async (response) => {
+                    data = await response.json();
+                    alert(data.message);
+                })
+                .catch((error) => {
+                    alert('Network Error: ' + error);
+                })
+                .finally(() => {
+                    secretInput.value = "";
+                    secretInput.focus();
+                });
+            }
+
+            secretInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.getElementById("reset-database-button").click();
+                }
+            });
+        </script>
+    </body>
+</html>

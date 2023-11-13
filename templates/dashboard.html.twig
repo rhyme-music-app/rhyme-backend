@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhyme: Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="css/global.css">
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>Dashboard</h1>
+    {% if not user.authenticated %}
+    <p style="color: red;">Please <a href="/login">log in as an administrator</a> to view the dashboard.</p>
+    {% else %}
+    <p>Here comes the DASHBOARD !!!</p>
+    {% endif %}
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Utils\Response\NormalizedJsonResponse;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -42,7 +43,29 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $status = $exception->getStatusCode();
         }
 
-        $event->setResponse(new NormalizedJsonResponse($json, $status));
+        // https://symfony.com/doc/current/routing.html#getting-the-route-name-and-parameters
+        if (str_starts_with(
+            $event->getRequest()->attributes->get('_route'),
+            'home_')
+        ) {
+            // This is a web route
+            $response = new Response('
+            <html>
+                <head>
+                    <title>Error</title>
+                </head>
+                <body>
+                    <div style="color: red;">
+                    <b>ERROR:</b> ' . $json['message'] . '
+                    </div>
+                </body>
+            </html>
+            ', $status);
+            $event->setResponse($response);
+        } else {
+            // Regular API routes
+            $event->setResponse(new NormalizedJsonResponse($json, $status));
+        }
     }
 
     public static function getSubscribedEvents(): array

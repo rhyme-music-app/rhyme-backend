@@ -46,17 +46,11 @@ class AuthController extends AbstractController
         return new UserInfoResponse(DatabaseConnection::lastInsertId());
     }
 
-    #[Route('/register', name: 'register', methods: ['POST'])]
-    public function register(Request $request): JsonResponse
+    /**
+     * Returns the user array.
+     */
+    public static function _internal_validate_login(array $data): array
     {
-        return self::_internal_register($request);
-    }
-
-    #[Route('/login', name: 'login', methods: ['POST'])]
-    public function login(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-
         Validator::validateArray_AllMustPresent($data, [
             'email' => 'users.email',
             'password' => 'users.password',
@@ -64,7 +58,7 @@ class AuthController extends AbstractController
         $email = $data['email'];
         $password = $data['password'];
 
-        $stmt = DatabaseConnection::prepare('SELECT id, password_hash FROM users WHERE email = :email');
+        $stmt = DatabaseConnection::prepare('SELECT id, email, name, password_hash, is_admin, deleted FROM users WHERE email = :email');
         $stmt->bindParam(':email', $email, QueryParam::STR);
         $stmt->execute();
 
@@ -78,7 +72,25 @@ class AuthController extends AbstractController
             throw new UnauthorizedHttpException('None', 'Wrong email or password.');
         }
 
-        return new UserTokenResponse($user['id']);
+        return $user;
+    }
+
+    public static function _internal_login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        return new UserTokenResponse(self::_internal_validate_login($data)['id']);
+    }
+
+    #[Route('/register', name: 'register', methods: ['POST'])]
+    public function register(Request $request): JsonResponse
+    {
+        return self::_internal_register($request);
+    }
+
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        return self::_internal_login($request);
     }
 
     #[Route('/logout', name: 'logout', methods: ['POST'])]

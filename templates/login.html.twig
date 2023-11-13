@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="css/global.css">
+    <style>
+        .login-button-bar {
+            justify-content: center;
+        }
+
+        @media only screen and (min-width: 1024px) {
+            form {
+                max-width: 1000px;
+            }
+        }
+
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>Admin Login</h1>
+    <div class="form-wrapper">
+        <form action="" method="POST">
+            <div style="color: red;">
+                {% if error %}
+                <b>ERROR:</b> {{ error }}
+                {% endif %}
+            </div>
+            <div class="field-wrapper">
+                <input type="text" id="input-email" name="email" class="input" required />
+                <label for="input-email" class="label">Email</label>
+            </div>
+            <div class="field-wrapper">
+                <input type="password" id="input-password" name="password" class="input" required />
+                <label for="input-password" class="label">Password</label>
+            </div>
+            <div class="button-bar login-button-bar">
+                <button class="button button-primary" type="submit">Login</button>
+                <a href="/signup">
+                    <button class="button" type="button">Signup</button>
+                </a>
+            </div>
+        </form>
+    </div>
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

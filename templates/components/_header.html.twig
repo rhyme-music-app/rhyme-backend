@@ -1,0 +1,16 @@
+<header class="header">
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/">Documentation</a></li>
+            {% if user.authenticated %}
+            <span>Logged in as <b>{{ user.name }}</b></span>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Signup</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

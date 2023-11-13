@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="css/global.css">
+    <style>
+        .signup-button-bar {
+            justify-content: center;
+        }
+
+        @media only screen and (min-width: 1024px) {
+            form {
+                max-width: 1000px;
+            }
+        }
+
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>Sign up as an Administrator</h1>
+    <div class="form-wrapper">
+        <form>
+            <div id="error-section-wrapper" style="color: red; display: none;">
+                <b>ERROR:</b> <span id="error-section"></span>
+            </div>
+            <div class="field-wrapper">
+                <input type="text" id="input-email" name="email" class="input" required />
+                <label for="input-email" class="label">Email</label>
+            </div>
+            <div class="field-wrapper">
+                <input type="password" id="input-password" name="password" class="input" required />
+                <label for="input-password" class="label">Password</label>
+            </div>
+            <div class="field-wrapper">
+                <input type="text" id="input-name" name="name" class="input" required />
+                <label for="input-name" class="label">Full Name</label>
+            </div>
+            <div class="field-wrapper">
+                <input type="text" id="input-secret" name="secret" class="input" required />
+                <label for="input-secret" class="label">Secret key (see (*) below)</label>
+            </div>
+            <div class="button-bar login-button-bar">
+                <button class="button button-primary" type="button" onclick="signup();">Signup</button>
+            </div>
+        </form>
+    </div>
+
+    <em>(*) To get secret key, first go to your .env file, then copy the string after the phrase <code>APP_SECRET=...</code></em>
+    <script>
+        function setError(message) {
+            document.getElementById('error-section').innerHTML = message;
+            document.getElementById('error-section-wrapper').style.display = 'block';
+        }
+
+        const emailInput = document.getElementById('input-email');
+        const passwordInput = document.getElementById('input-password');
+        const nameInput = document.getElementById('input-name');
+        const secretInput = document.getElementById('input-secret');
+
+        function signup() {
+            fetch('/api/auth/register-admin', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'email': emailInput.value ?? '',
+                    'password': passwordInput.value ?? '',
+                    'name': nameInput.value ?? '',
+                    'secret': secretInput.value ?? '',
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.success) {
+                    setError(data?.message);
+                } else {
+                    window.location.replace('/login');
+                }
+            })
+            .catch((error) => {
+                alert('Network Error: ' + error);
+            })
+            .finally(() => {
+                passwordInput.value = "";
+                secretInput.value = "";
+                passwordInput.focus();
+            });
+        }
+    </script>
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

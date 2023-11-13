@@ -3,6 +3,7 @@
 namespace App\Controller\Web;
 
 use App\Middleware\WebAuth;
+use App\Utils\DatabaseResetter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,7 +74,7 @@ class HomeController extends AbstractController
         return $response;
     }
 
-    #[Route('/dashboard', name: 'dashboard', methods: 'GET')]
+    #[Route('/dashboard', name: 'dashboard', methods: ['GET'])]
     public function dashboardPage(Request $request): Response
     {
         return $this->render('dashboard.html.twig', [
@@ -81,7 +82,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/logout', name: 'logout', methods: 'GET')]
+    #[Route('/logout', name: 'logout', methods: ['GET'])]
     public function logoutPage(Request $request): Response
     {
         try {
@@ -96,5 +97,21 @@ class HomeController extends AbstractController
         }
 
         return new RedirectResponse('/');
+    }
+
+    #[Route('/signup', name: 'signup', methods: ['GET'])]
+    public function signupPage(Request $request): Response
+    {
+        return $this->render('signup.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/reset-database', name: 'reset_database', methods: ['GET'])]
+    public function resetDatabase(Request $request): Response
+    {
+        $user = WebAuth::assertAdmin($request);
+        DatabaseResetter::resetDatabase();
+        return new RedirectResponse('/dashboard');
     }
 }

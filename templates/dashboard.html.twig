@@ -12,7 +12,34 @@
     {% if not user.authenticated %}
     <p style="color: red;">Please <a href="/login">log in as an administrator</a> to view the dashboard.</p>
     {% else %}
-    <p>Here comes the DASHBOARD !!!</p>
+
+
+
+
+    <div class="section">
+        <h2>Reset database</h2>
+
+        <p>BE CAREFUL: Resetting the database will <b>ERASE ALL EXISTING DATA</b> in the database, including <b>ALL USER ACCOUNTS, EVEN THE ADMINS</b> !</p>
+        <p>However, <b>IF YOU ARE RUNNING THIS APP THE FIRST TIME, RESET DATABASE NOW !</b></p>
+
+        <button id="reset-database-button" class="button button-danger" onclick="resetDatabase();">Reset database !</button>
+    </div>
+
+    <script>
+        function resetDatabase() {
+            const phrase = "Delete all data";
+            const ans = prompt(`Please type in "${phrase}" to confirm database reset:`);
+            if (ans !== phrase) {
+                alert('Database left unchanged.');
+            } else {
+                window.location.replace('/reset-database');
+            }
+        }
+    </script>
+
+
+
+
     {% endif %}
     {{ include("components/_footer.html.twig") }}
 </body>

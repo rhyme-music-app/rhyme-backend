@@ -22,9 +22,15 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 #[Route('/auth', name: 'auth_')]
 class AuthController extends AbstractController
 {
-    public static function _internal_register(Request $request): JsonResponse
+    public static function _internal_register(Request $request, bool $isAdmin = false): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
+        if ($isAdmin) {
+            if (($data['secret'] ?? '') !== $_ENV['APP_SECRET']) {
+                throw new UnauthorizedHttpException('None', 'Wrong secret key !');
+            }
+        }
 
         Validator::validateUserUpdate_allMustPresent($data);
         $email = $data['email'];
@@ -35,12 +41,13 @@ class AuthController extends AbstractController
         unset($password);
 
         $stmt = DatabaseConnection::prepare(
-            'INSERT INTO users (email, name, password_hash)
-            VALUES (:email, :name, :password_hash);'
+            'INSERT INTO users (email, name, password_hash, is_admin)
+            VALUES (:email, :name, :password_hash, :is_admin);'
         );
         $stmt->bindParam(':email', $email, QueryParam::STR);
         $stmt->bindParam(':name', $name, QueryParam::STR);
         $stmt->bindParam(':password_hash', $passwordHash, QueryParam::STR);
+        $stmt->bindParam(':is_admin', $isAdmin, QueryParam::BOOL);
         $stmt->execute();
 
         return new UserInfoResponse(DatabaseConnection::lastInsertId());
@@ -85,6 +92,12 @@ class AuthController extends AbstractController
     public function register(Request $request): JsonResponse
     {
         return self::_internal_register($request);
+    }
+
+    #[Route('/register-admin', name: 'register_admin', methods: ['POST'])]
+    public function registerAdmin(Request $request): JsonResponse
+    {
+        return self::_internal_register($request, true);
     }
 
     #[Route('/login', name: 'login', methods: ['POST'])]

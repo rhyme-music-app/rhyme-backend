@@ -5,10 +5,10 @@ use App\Utils\Authenticator;
 
 class UserTokenResponse extends NormalizedJsonResponse
 {
-    public function __construct(string $userId)
+    public function __construct(array $user)
     {
-        parent::__construct([
-            'token' => Authenticator::issueToken($userId)
-        ], 200);
+        $user['token'] = Authenticator::issueToken($user['id']);
+        unset($user['password_hash']);
+        parent::__construct($user, 200);
     }
 }

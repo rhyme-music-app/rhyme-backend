@@ -46,14 +46,9 @@
         }
         ```
 
-     - Response on success:
-
-        ```json
-        {
-            "success": true,
-            "token": "..."
-        }
-        ```
+     - Response on success: [`UserInfo`](#userinfo) plus one field
+       named `token`, which is the authentication token used for
+       AUTH routes.
 
 3. **POST AUTH /api/auth/logout**
 

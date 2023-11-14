@@ -85,7 +85,7 @@ class AuthController extends AbstractController
     public static function _internal_login(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        return new UserTokenResponse(self::_internal_validate_login($data)['id']);
+        return new UserTokenResponse(self::_internal_validate_login($data));
     }
 
     #[Route('/register', name: 'register', methods: ['POST'])]

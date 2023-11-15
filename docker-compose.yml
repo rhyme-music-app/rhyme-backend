@@ -16,7 +16,7 @@ services:
       - rhyme-mysql
     volumes:
       - ./:/var/www
-      - ./public:/var/www/html
+      - ./public_html:/var/www/html
     ports:
       - 8000:80
     # https://stackoverflow.com/a/70725882/13680015

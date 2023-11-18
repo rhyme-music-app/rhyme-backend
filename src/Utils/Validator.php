@@ -129,9 +129,12 @@ class Validator
             case 'users.name':
             case 'genres.name':
             case 'artists.name':
-            case 'artists.type': // TODO: artists.type is an enum, not an arbitrary string !
             case 'songs.name':
             case 'playlists.name':
+                self::assertUnicodeNoSpecialCharsAndNotEmpty($value, $path, $keyName, $message);
+                break;
+
+            case 'artists.type': // TODO: artists.type is an enum, not an arbitrary string !
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 break;
 
@@ -157,6 +160,16 @@ class Validator
         }
         // https://stackoverflow.com/a/6497946/13680015
         if (preg_match('/[^\x20-\x7e]/', $value)) {
+            throw new ValidationException($keyName, 'contains invalid characters', $message);
+        }
+    }
+
+    private static function assertUnicodeNoSpecialCharsAndNotEmpty(mixed &$value, string $path, string $keyName, ?string $message): void
+    {
+        if (!$value) {
+            throw new ValidationException($keyName, 'is empty', $message);
+        }
+        if (!preg_match('/^(\p{L}|\p{Nd}|[ _-])+$/u', $value)) {
             throw new ValidationException($keyName, 'contains invalid characters', $message);
         }
     }

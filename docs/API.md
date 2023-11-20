@@ -333,7 +333,7 @@
         where `[ ... ]` is a list of [`GenreInfo`](#genreinfo)
         objects.
 
-2. **GET /api/genres/{genre_name}**
+2. **GET /api/genres/{genre_id}**
 
     Returns information of a genre.
 
@@ -347,14 +347,14 @@
      - Payload: [`GenreUpdate`](#genreupdate).
      - Response on success: [`GenreInfo`](#genreinfo).
 
-4. **PUT AUTH ADMIN /api/genres/{genre_name}**
+4. **PUT AUTH ADMIN /api/genres/{genre_id}**
 
     Updates an existing genre.
 
      - Payload: [`GenreUpdate`](#genreupdate).
      - Response on success: [`GenreInfo`](#genreinfo).
 
-5. **DELETE AUTH ADMIN /api/genres/{genre_name}**
+5. **DELETE AUTH ADMIN /api/genres/{genre_id}**
 
     Deletes an existing genre.
 

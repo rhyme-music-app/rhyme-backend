@@ -169,7 +169,7 @@ class Validator
         if (!$value) {
             throw new ValidationException($keyName, 'is empty', $message);
         }
-        if (!preg_match('/^(\p{L}|\p{Nd}|[ _-])+$/u', $value)) {
+        if (!preg_match('/^(\p{L}|\p{Nd}|[\x20-\x7e])+$/u', $value)) {
             throw new ValidationException($keyName, 'contains invalid characters', $message);
         }
     }

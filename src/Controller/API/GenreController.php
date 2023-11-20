@@ -114,4 +114,29 @@ class GenreController extends AbstractController
 
         return new NormalizedJsonResponse([], 200);
     }
+
+    /**
+     * Route 6
+     */
+    #[Route('/{genreId<\d+>}/songs', name: 'get_songs', methods: ['GET'])]
+    public function getGenreSongs(string $genreId): JsonResponse
+    {
+        $songFields = [
+            'id', 'name', 'audio_link',
+            'added_at', 'updated_at',
+            'added_by', 'updated_by',
+            'streams'
+        ];
+        $stmt = DatabaseConnection::prepare('SELECT
+            ' . implode(', ', $songFields) . '
+            FROM
+                songs s
+            INNER JOIN genre_song pivot
+                ON pivot.song_id = s.id
+            WHERE
+                pivot.genre_id = :genreId;'
+        );
+        $stmt->bindParam(':genreId', $genreId, QueryParam::STR);
+        return ListResponse::withCustomQuery($stmt, $songFields);
+    }
 }

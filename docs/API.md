@@ -361,6 +361,21 @@
      - Empty payload.
      - Empty response on success.
 
+6. **GET /api/genres/{genre_id}/songs**
+
+    Retrieves a list of this genre's songs.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`SongInfo`](#songinfo) objects.
+
 ### Artist API
 
 1. **GET /api/artists**

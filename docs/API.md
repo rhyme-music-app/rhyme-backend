@@ -562,6 +562,7 @@ The following object schemas are listed in their alphabetical order.
     "success": true,
     "id": "123",
     "name": "Frederic Chopin",
+    "image_link": "...",
     "added_at": "When was this artist added. See notes about datetimes.",
     "updated_at": "When was this artist last updated. See notes about datetimes.",
     "added_by": "ID of the user that added this artist",
@@ -574,6 +575,7 @@ The following object schemas are listed in their alphabetical order.
 ```json
 {
     "name": "Alan Walker",
+    "image_link": "The link to image, or null"
 }
 ```
 
@@ -587,6 +589,7 @@ Otherwise, specify the updated fields only.
     "success": true,
     "id": 11,
     "name": "Classical",
+    "image_link": "The link to image, or null",
     "added_at": "When was this genre added. See notes about datetimes.",
     "updated_at": "When was this genre last updated. See notes about datetimes.",
     "added_by": "ID of the user that added this genre",
@@ -598,7 +601,8 @@ Otherwise, specify the updated fields only.
 
 ```json
 {
-    "name": "Classical Music"
+    "name": "Classical Music",
+    "image_link": "The link to image, or null"
 }
 ```
 
@@ -612,6 +616,7 @@ Otherwise, specify the updated fields only.
     "success": true,
     "id": 3003,
     "name": "My Playlist",
+    "image_link": "The link to image, or null",
     "owned_by": "ID of the user that added this playlist, which is also the only one that could update it",
     "is_public": true, // or false
     "added_at": "When was this playlist added. See notes about datetimes.",
@@ -624,6 +629,7 @@ Otherwise, specify the updated fields only.
 ```json
 {
     "name": "Our Playlist",
+    "image_link": "The link to image, or null",
     "is_public": false // or true
 }
 ```
@@ -635,6 +641,7 @@ Otherwise, specify the updated fields only.
     "success": true,
     "id": "123456",
     "name": "Happy Birthday",
+    "image_link": "The link to image, or null",
     "audio_link": "A link that can be embedded into <audio> HTML tag",
     "added_at": "When was this song added. See notes about datetimes.",
     "updated_at": "When was this song last updated. See notes about datetimes.",
@@ -650,6 +657,7 @@ Otherwise, specify the updated fields only.
 {
     "name": "Happy Birthday to You",
     "audio_link": "See SongInfo",
+    "image_link": "The link to image, or null"
 }
 ```
 
@@ -661,6 +669,7 @@ Otherwise, specify the updated fields only.
     "id": "13680015",
     "email": "any@email.com",
     "name": "User's Full Name",
+    "image_link": "The link to image, or null",
     "is_admin": false, // or true
     "deleted": false // or true
 }
@@ -672,7 +681,8 @@ Otherwise, specify the updated fields only.
 {
     "email": "any@email.com",
     "password": "123456789",
-    "name": "User's Full Name"
+    "name": "User's Full Name",
+    "image_link": "The link to image, or null"
 }
 ```
 

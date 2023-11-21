@@ -13,7 +13,7 @@ class SongInfoResponse extends NormalizedJsonResponse
     {
         $stmt = DatabaseConnection::prepare(
             'SELECT
-                id, name, audio_link,
+                id, name, audio_link, image_link,
                 added_at, updated_at,
                 added_by, updated_by,
                 streams

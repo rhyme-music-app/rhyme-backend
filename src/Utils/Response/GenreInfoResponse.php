@@ -13,7 +13,7 @@ class GenreInfoResponse extends NormalizedJsonResponse
     {
         $stmt = DatabaseConnection::prepare(
             'SELECT
-                id, name, added_at, updated_at,
+                id, name, image_link, added_at, updated_at,
                 added_by, updated_by
             FROM genres
             WHERE id = :genreId;'

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+{% set title = id ? 'Edit song ' ~ id : 'Add song' %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/global.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>{{ title }}</h1>
+    {% if not user.authenticated %}
+    <p style="color: red;">Please <a href="/login">log in as an administrator</a> to view this page.</p>
+    {% else %}
+
+
+
+
+    <button class="button" onclick="back()" style="margin: 20px;">Back</button>
+
+    <div class="section">
+        <h2>General Information</h2>
+        <div class="form-wrapper">
+            <form>
+                <div id="error-section-wrapper" style="color: red; display: none;">
+                    <b>ERROR:</b> <span id="error-section"></span>
+                </div>
+                <div class="field-wrapper">
+                    <input type="text" id="input-name" name="name" class="input" required />
+                    <label for="input-name" class="label">Name</label>
+                </div>
+                <div class="field-wrapper">
+                    <input type="text" id="input-audio-link" name="audio_link" class="input" required />
+                    <label for="input-audio-link" class="label">Audio Link</label>
+                </div>
+                <div class="field-wrapper">
+                    <input type="text" id="input-image-link" name="image_link" class="input" required />
+                    <label for="input-image-link" class="label">Image Link</label>
+                </div>
+                <div class="button-bar login-button-bar">
+                    <button class="button button-primary" type="button" onclick="update();">{{ id ? "Update" : "Add" }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Associated Genres</h2>
+        <div id="genre-error-section-wrapper" style="color: red; display: none;">
+            <b>ERROR:</b> <span id="genre-error-section"></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Genre</th>
+                    <th>OPERATIONS</th>
+                </tr>
+            </thead>
+
+            <tbody id="genre-list"></tbody>
+        </table>
+        <button onclick="addGenre()" class="button button-primary">Add Genre</button>
+    </div>
+
+    <div class="section">
+        <h2>Associated Artists</h2>
+        <div id="artist-error-section-wrapper" style="color: red; display: none;">
+            <b>ERROR:</b> <span id="artist-error-section"></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artist</th>
+                    <th>OPERATIONS</th>
+                </tr>
+            </thead>
+
+            <tbody id="artist-list"></tbody>
+        </table>
+        <button onclick="addArtist()" class="button button-primary">Add Artist</button>
+    </div>
+
+    <input type="text" id="song-id-holder" value="{{ id }}" hidden disabled>
+
+    <script>
+        const $ = document.querySelector.bind(document);
+
+        function back() {
+            window.location.href = '/manage/songs';
+        }
+
+        const songId = document.getElementById('song-id-holder').value;
+
+        const onError = (err) => {
+            document.getElementById('error-section').innerHTML = err?.message;
+            document.getElementById('error-section-wrapper').style.display = 'block';
+        };
+
+        //////////////////////////////////////////////////////////////
+
+        const onGenreUpdateError = (err) => {
+            document.getElementById('genre-error-section').innerHTML = err?.message;
+            document.getElementById('genre-error-section-wrapper').style.display = 'block';
+        };
+
+        const clearGenreUpdateError = (err) => {
+            document.getElementById('genre-error-section').innerHTML = "";
+            document.getElementById('genre-error-section-wrapper').style.display = 'none';
+        };
+
+        const addGenre = () => {
+            window.location.href = `/manage/songs/add-genre?songId=${songId}`;
+        };
+
+        const updateGenres = () => {
+            const genreList = $('#genre-list');
+            while (genreList.lastChild) {
+                genreList.removeChild(genreList.lastChild);
+            }
+
+            fetch(`/api/songs/${songId}/genres`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    onGenreUpdateError(data);
+                    return;
+                }
+
+                data.list.map((genre) => {
+                    const tdGenreName = document.createElement('td');
+                    tdGenreName.className = "entity-name";
+                    tdGenreName.innerHTML = genre.name;
+                    
+                    const tdOperations = document.createElement('td');
+                    tdOperations.className = "entity-operations";
+
+                    const removeButton = document.createElement('button');
+                    removeButton.className = "button button-danger";
+                    removeButton.innerHTML = "Remove";
+                    removeButton.onclick = () => {
+                        if (confirm(`Are you sure you want to remove this genre from this song ?\n\nGenre Name: ${genre.name}`)) {
+                            fetch(`/api/songs/${songId}/genres/${genre.id}`, {
+                                method: 'DELETE',
+                            })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (!data?.success) {
+                                    return onGenreUpdateError(data);
+                                }
+                                updateGenres();
+                            })
+                            .catch(onGenreUpdateError);
+                        }
+                    }
+                    tdOperations.appendChild(removeButton);
+
+                    const tr = document.createElement('tr');
+                    tr.appendChild(tdGenreName);
+                    tr.appendChild(tdOperations);
+                    genreList.appendChild(tr);
+                });
+            })
+            .catch(onGenreUpdateError);
+        };
+
+        //////////////////////////////////////////////////////////////
+
+        const onArtistUpdateError = (err) => {
+            document.getElementById('artist-error-section').innerHTML = err?.message;
+            document.getElementById('artist-error-section-wrapper').style.display = 'block';
+        };
+
+        const clearArtistUpdateError = (err) => {
+            document.getElementById('artist-error-section').innerHTML = "";
+            document.getElementById('artist-error-section-wrapper').style.display = 'none';
+        };
+
+        const addArtist = () => {
+            window.location.href = `/manage/songs/add-artist?songId=${songId}`;
+        };
+
+        const updateArtists = () => {
+            const artistList = $('#artist-list');
+            while (artistList.lastChild) {
+                artistList.removeChild(artistList.lastChild);
+            }
+
+            fetch(`/api/songs/${songId}/artists`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    onArtistUpdateError(data);
+                    return;
+                }
+
+                data.list.map((artist) => {
+                    const tdArtistName = document.createElement('td');
+                    tdArtistName.className = "entity-name";
+                    tdArtistName.innerHTML = artist.name;
+                    
+                    const tdOperations = document.createElement('td');
+                    tdOperations.className = "entity-operations";
+
+                    const removeButton = document.createElement('button');
+                    removeButton.className = "button button-danger";
+                    removeButton.innerHTML = "Remove";
+                    removeButton.onclick = () => {
+                        if (confirm(`Are you sure you want to remove this artist from this song ?\n\Artist Name: ${artist.name}`)) {
+                            fetch(`/api/songs/${songId}/artists/${artist.id}`, {
+                                method: 'DELETE',
+                            })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (!data?.success) {
+                                    return onArtistUpdateError(data);
+                                }
+                                updateArtists();
+                            })
+                            .catch(onArtistUpdateError);
+                        }
+                    }
+                    tdOperations.appendChild(removeButton);
+
+                    const tr = document.createElement('tr');
+                    tr.appendChild(tdArtistName);
+                    tr.appendChild(tdOperations);
+                    artistList.appendChild(tr);
+                });
+            })
+            .catch(onArtistUpdateError);
+        };
+
+        //////////////////////////////////////////////////////////////
+
+        window.onload = () => {
+            if (!songId) return;
+            fetch(`/api/songs/${songId}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    onError(data);
+                    return;
+                }
+
+                $('#input-name').value = data.name;
+                $('#input-audio-link').value = data.audio_link;
+                $('#input-image-link').value = data.image_link;
+            })
+            .catch(onError);
+
+            updateGenres();
+            updateArtists();
+        };
+
+        function update() {
+            const name = $('#input-name').value ?? '';
+            const audio_link = $('#input-audio-link').value ?? '';
+            const image_link = $('#input-image-link').value || null;
+
+            let url = '/api/songs/';
+            let method = 'POST';
+            if (songId) {
+                url += songId;
+                method = 'PUT';
+            }
+
+            fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    name, audio_link, image_link
+                }),
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    onError(data);
+                    return;
+                }
+
+                back();
+            })
+            .catch(onError);
+        }
+    </script>
+
+
+
+
+
+
+    {% endif %}
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

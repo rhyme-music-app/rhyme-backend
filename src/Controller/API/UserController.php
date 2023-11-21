@@ -26,7 +26,7 @@ class UserController extends AbstractController
     public function indexUsers(): JsonResponse
     {
         return ListResponse::selectAllFromOneTable('users', [
-            'id', 'email', 'name', 'is_admin', 'deleted'
+            'id', 'email', 'image_link', 'name', 'is_admin', 'deleted'
         ]);
     }
 
@@ -116,7 +116,7 @@ class UserController extends AbstractController
         FavoriteAccess::assertViewer($userId, $user);
 
         $playlistFields = [
-            'id', 'name', 'owned_by', 'is_public',
+            'id', 'name', 'image_link', 'owned_by', 'is_public',
             'added_at', 'updated_at'
         ];
         $stmt = DatabaseConnection::prepare('SELECT
@@ -184,7 +184,7 @@ class UserController extends AbstractController
         FavoriteAccess::assertViewer($userId, $user);
 
         $songFields = [
-            'id', 'name', 'audio_link',
+            'id', 'name', 'audio_link', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by',
             'streams'
@@ -252,7 +252,7 @@ class UserController extends AbstractController
     {
         $user = Auth::getUserNoException($request);
         $playlistFields = [
-            'id', 'name', 'owned_by', 'is_public',
+            'id', 'name', 'image_link', 'owned_by', 'is_public',
             'added_at', 'updated_at'
         ];
 

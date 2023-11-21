@@ -82,6 +82,75 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/manage/songs', name: 'manage_songs', methods: ['GET'])]
+    public function manageSongsPage(Request $request): Response
+    {
+        return $this->render('manage-songs.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/songs/editor', name: 'edit_song', methods: ['GET'])]
+    public function editSongPage(Request $request): Response
+    {
+        return $this->render('edit-song.html.twig', [
+            'id' => $request->query->get('id'),
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/songs/add-genre', name: 'add_genre_to_song', methods: ['GET'])]
+    public function addGenreToSongPage(Request $request): Response
+    {
+        return $this->render('add-genre-to-song.html.twig', [
+            'songId' => $request->query->get('songId'),
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/songs/add-artist', name: 'add_artist_to_song', methods: ['GET'])]
+    public function addArtistToSongPage(Request $request): Response
+    {
+        return $this->render('add-artist-to-song.html.twig', [
+            'songId' => $request->query->get('songId'),
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/genres', name: 'manage_genres', methods: ['GET'])]
+    public function manageGenresPage(Request $request): Response
+    {
+        return $this->render('manage-genres.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/genres/editor', name: 'edit_genre', methods: ['GET'])]
+    public function editGenrePage(Request $request): Response
+    {
+        return $this->render('edit-genre.html.twig', [
+            'id' => $request->query->get('id'),
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/artists', name: 'manage_artists', methods: ['GET'])]
+    public function manageArtistsPage(Request $request): Response
+    {
+        return $this->render('manage-artists.html.twig', [
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
+    #[Route('/manage/artists/editor', name: 'edit_artist', methods: ['GET'])]
+    public function editArtistPage(Request $request): Response
+    {
+        return $this->render('edit-artist.html.twig', [
+            'id' => $request->query->get('id'),
+            'user' => WebAuth::getTwigUserPayload($request)
+        ]);
+    }
+
     #[Route('/logout', name: 'logout', methods: ['GET'])]
     public function logoutPage(Request $request): Response
     {

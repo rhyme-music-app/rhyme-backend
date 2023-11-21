@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Artists of Songs</title>
+    <link rel="stylesheet" type="text/css" href="/css/global.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>Song's Artist Manager</h1>
+    {% if not user.authenticated %}
+    <p style="color: red;">Please <a href="/login">log in as an administrator</a> to view this page.</p>
+    {% else %}
+    {% if not songId %}
+    <p style="color: red;">Invalid request.</p>
+    {% else %}
+
+
+
+
+    <button class="button" onclick="back()" style="margin: 20px;">Back</button>
+
+    <h2 id="song-name"></h2>
+
+    <div id="error-section-wrapper" style="color: red; display: none;">
+        <b>ERROR:</b> <span id="error-section"></span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image Link</th>
+                <th>Added At</th>
+                <th>Updated At</th>
+                <th>Added By</th>
+                <th>Updated By</th>
+                <th>OPERATIONS</th>
+            </tr>
+        </thead>
+        <tbody id="artist-list">
+        </tbody>
+    </table>
+
+    <input type="text" id="song-id-holder" value="{{ songId }}" hidden disabled>
+
+    <script>
+        function back() {
+            window.location.href = `/manage/songs/editor?id=${songId}`;
+        }
+
+        const songId = document.getElementById('song-id-holder').value;
+
+        const onError = (err) => {
+            document.getElementById('error-section').innerHTML = err?.message;
+            document.getElementById('error-section-wrapper').style.display = 'block';
+        };
+
+        window.onload = async () => {
+            const artistList = document.getElementById('artist-list');
+            while (artistList.lastChild) {
+                artistList.removeChild(artistList.lastChild);
+            }
+
+            Promise.all([
+                fetch(`/api/artists`, {
+                    method: 'GET',
+                })
+                .then((res) => res.json()),
+
+                fetch(`/api/songs/${songId}/artists`, {
+                    method: 'GET',
+                })
+                .then((res) => res.json()),
+
+                fetch(`/api/songs/${songId}`, {
+                    method: 'GET',
+                })
+                .then((res) => res.json()),
+            ])
+            .then(([allArtistsData, associatedArtistsData, songData]) => {
+                if (!allArtistsData?.success) {
+                    return onError(allArtistsData);
+                }
+
+                if (!associatedArtistsData?.success) {
+                    return onError(associatedArtistsData);
+                }
+
+                if (!songData?.success) {
+                    return onError(songData);
+                }
+
+                document.getElementById('song-name').innerHTML = songData.name;
+
+                return allArtistsData.list.filter((artist) => {
+                    // Filter out the artists already associated with this song,
+                    // only keep the artists that are not added to this song
+                    // yet (hereafter "alien artists").
+                    return associatedArtistsData.list.filter((a) => a.id == artist.id).length == 0;
+                });
+            })
+            .then((alienArtists) => {
+                const convertFieldToHtmlTd = (artist, fieldName) => {
+                    const td = document.createElement('td');
+                    td.innerHTML = (
+                        artist[fieldName] === null
+                        ? `<span class="entity-${fieldName} null-cell">null</span>`
+                        : `<span class="entity-${fieldName}">${
+                            fieldName.includes('link')
+                            ? `<a href="${artist[fieldName]}">${artist[fieldName]}</a>`
+                            : artist[fieldName]
+                        }</span>`
+                    );
+                    return td;
+                };
+
+                const createOperationsTd = (artist) => {
+                    const onAdd = () => {
+                        fetch(`/api/songs/${songId}/artists/${artist.id}`, {
+                            method: 'POST',
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (!data?.success) {
+                                return onError(data);
+                            }
+                            window.location.reload();
+                        })
+                        .catch(onError);
+                    }
+
+                    const addButton = document.createElement('button');
+                    addButton.innerHTML = "Add to Song";
+                    addButton.className = "button";
+                    addButton.onclick = onAdd;
+
+                    const operationTd = document.createElement('td');
+                    operationTd.className = 'entity-operations';
+                    operationTd.appendChild(addButton);
+                    return operationTd;
+                };
+
+                for (const artist of alienArtists) {
+                    const tr = document.createElement('tr');
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'id'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'name'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'image_link'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'added_at'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'updated_at'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'added_by'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'updated_by'));
+                    tr.appendChild(createOperationsTd(artist));
+                    artistList.appendChild(tr);
+                }
+            })
+            .catch(onError);
+        }
+    </script>
+
+
+
+
+    {% endif %}
+    {% endif %}
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

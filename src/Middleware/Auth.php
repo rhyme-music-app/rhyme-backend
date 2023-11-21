@@ -70,14 +70,22 @@ class Auth
 
     private static function extractTokenFromRequest(Request $request): string
     {
+        $cookies = $request->cookies;
+
         $authHeader = $request->headers->get('Authorization');
         // https://stackoverflow.com/a/1252710/13680015
         $pos = -1;
-        if (!$authHeader || ($pos = strpos($authHeader, 'Bearer ')) !== 0)
-        {
-            throw new UnauthorizedHttpException('Bearer', 'User not logged in.');
+        $token = '';
+        if (!$authHeader || ($pos = strpos($authHeader, 'Bearer ')) !== 0) {
+            if ($cookies->has('token')) {
+                // This request is from the HomeController's admin pages.
+                $token = $cookies->get('token');
+            } else {
+                throw new UnauthorizedHttpException('Bearer', 'User not logged in.');
+            }
+        } else {
+            $token = substr_replace($authHeader, '', $pos, strlen('Bearer '));
         }
-        $token = substr_replace($authHeader, '', $pos, strlen('Bearer '));
         return $token;
     }
 }

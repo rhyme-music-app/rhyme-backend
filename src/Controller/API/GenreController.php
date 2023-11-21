@@ -25,7 +25,7 @@ class GenreController extends AbstractController
     public function indexGenres(): JsonResponse
     {
         return ListResponse::selectAllFromOneTable('genres', [
-            'id', 'name', 'added_at', 'updated_at', 'added_by', 'updated_by'
+            'id', 'name', 'image_link', 'added_at', 'updated_at', 'added_by', 'updated_by'
         ]);
     }
 
@@ -50,12 +50,14 @@ class GenreController extends AbstractController
         Validator::validateGenreUpdate_AllMustPresent($data);
 
         $stmt = DatabaseConnection::prepare('INSERT INTO genres
-        (name, added_at, updated_at, added_by, updated_by)
+        (name, image_link, added_at, updated_at, added_by, updated_by)
         VALUES
-        (:name, :added_at, :updated_at, :added_by, :updated_by);');
+        (:name, :image_link, :added_at, :updated_at, :added_by, :updated_by);');
 
         $now = new DateTime();
+        $data['image_link'] = $data['image_link'] ?? null;
         $stmt->bindParam(':name', $data['name'], QueryParam::STR);
+        $stmt->bindParam(':image_link', $data['image_link'], QueryParam::STR);
         $stmt->bindParam(':added_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':updated_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':added_by', $userId, QueryParam::STR);
@@ -122,7 +124,7 @@ class GenreController extends AbstractController
     public function getGenreSongs(string $genreId): JsonResponse
     {
         $songFields = [
-            'id', 'name', 'audio_link',
+            'id', 'name', 'audio_link', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by',
             'streams'

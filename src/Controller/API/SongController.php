@@ -25,7 +25,7 @@ class SongController extends AbstractController
     public function indexSongs(): JsonResponse
     {
         return ListResponse::selectAllFromOneTable('songs', [
-            'id', 'name', 'audio_link',
+            'id', 'name', 'audio_link', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by',
             'streams'
@@ -53,13 +53,15 @@ class SongController extends AbstractController
         Validator::validateSongUpdate_AllMustPresent($data);
 
         $stmt = DatabaseConnection::prepare('INSERT INTO songs
-        (name, audio_link, added_at, updated_at, added_by, updated_by, streams)
+        (name, audio_link, image_link, added_at, updated_at, added_by, updated_by, streams)
         VALUES
-        (:name, :audio_link, :added_at, :updated_at, :added_by, :updated_by, 0);');
+        (:name, :audio_link, :image_link, :added_at, :updated_at, :added_by, :updated_by, 0);');
 
         $now = new DateTime();
+        $data['image_link'] = $data['image_link'] ?? null;
         $stmt->bindParam(':name', $data['name'], QueryParam::STR);
         $stmt->bindParam(':audio_link', $data['audio_link'], QueryParam::STR);
+        $stmt->bindParam(':image_link', $data['image_link'], QueryParam::STR);
         $stmt->bindParam(':added_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':updated_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':added_by', $userId, QueryParam::STR);
@@ -147,7 +149,7 @@ class SongController extends AbstractController
     public function getSongArtists(string $songId): JsonResponse
     {
         $artistFields = [
-            'id', 'name', 'type',
+            'id', 'name', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by'
         ];
@@ -211,7 +213,7 @@ class SongController extends AbstractController
     public function getSongGenres(string $songId): JsonResponse
     {
         $genreFields = [
-            'id', 'name',
+            'id', 'name', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by'
         ];

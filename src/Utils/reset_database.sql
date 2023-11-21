@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`users` (
   `password_hash` VARCHAR(256) CHARACTER SET 'ascii' COLLATE 'ascii_general_ci' NOT NULL,
   `is_admin` TINYINT NOT NULL DEFAULT 0,
   `deleted` TINYINT NOT NULL DEFAULT 0,
+  `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -44,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`genres` (
   `updated_at` DATETIME NOT NULL,
   `added_by` INT NOT NULL,
   `updated_by` INT NOT NULL,
+  `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
   INDEX `fk_genres_users_id_idx` (`updated_by` ASC) VISIBLE,
@@ -69,11 +71,11 @@ DROP TABLE IF EXISTS `rhyme`.`artists` ;
 CREATE TABLE IF NOT EXISTS `rhyme`.`artists` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(512) NOT NULL,
-  `type` ENUM('singer', 'rapper', 'composer', 'dj', 'producer', 'pianist', 'violinist') NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
   `added_by` INT NOT NULL,
   `updated_by` INT NOT NULL,
+  `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_artists_users_id_idx` (`added_by` ASC) VISIBLE,
   INDEX `fk_artists_updated_by_users_id_idx` (`updated_by` ASC) VISIBLE,
@@ -105,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`songs` (
   `added_by` INT NOT NULL,
   `updated_by` INT NOT NULL,
   `streams` BIGINT(100) NOT NULL,
+  `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `audio_link_UNIQUE` (`audio_link` ASC) VISIBLE,
   INDEX `fk_songs_added_by_users_id_idx` (`added_by` ASC) VISIBLE,
@@ -134,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`playlists` (
   `is_public` TINYINT NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
+  `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_playlists_users_id_idx` (`owned_by` ASC) VISIBLE,
   CONSTRAINT `fk_playlists_users_id`

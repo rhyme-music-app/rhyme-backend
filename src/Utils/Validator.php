@@ -7,7 +7,8 @@ class Validator
 {
     private static $specs_PlaylistUpdate = [
         'name' => 'playlists.name',
-        'is_public' => 'playlists.is_public'
+        'is_public' => 'playlists.is_public',
+        'image_link' => 'playlists.image_link',
     ];
 
     public static function validatePlaylistUpdate_AllMustPresent(array $array, ?string $message = null): void
@@ -22,7 +23,8 @@ class Validator
 
     private static $specs_SongUpdate = [
         'name' => 'songs.name',
-        'audio_link' => 'songs.audio_link'
+        'audio_link' => 'songs.audio_link',
+        'image_link' => 'songs.image_link',
     ];
 
     public static function validateSongUpdate_AllMustPresent(array $array, ?string $message = null): void
@@ -37,7 +39,7 @@ class Validator
 
     private static $specs_ArtistUpdate = [
         'name' => 'artists.name',
-        'type' => 'artists.type'
+        'image_link' => 'artists.image_link',
     ];
 
     public static function validateArtistUpdate_AllMustPresent(array $array, ?string $message = null): void
@@ -52,6 +54,7 @@ class Validator
 
     private static $specs_GenreUpdate = [
         'name' => 'genres.name',
+        'image_link' => 'genres.image_link',
     ];
     
     public static function validateGenreUpdate_AllMustPresent(array $array, ?string $message = null): void
@@ -68,6 +71,7 @@ class Validator
         'email' => 'users.email',
         'password' => 'users.password',
         'name' => 'users.name',
+        'image_link' => 'users.image_link',
     ];
 
     public static function validateUserUpdate_AllMustPresent(array $array, ?string $message = null): void
@@ -138,6 +142,12 @@ class Validator
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 break;
 
+            case 'users.image_link':
+            case 'songs.image_link':
+            case 'playlists.image_link':
+            case 'artists.image_link':
+            case 'genres.image_link':
+                if ($value === null) break;
             case 'songs.audio_link':
                 self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 if (!filter_var($value, FILTER_VALIDATE_URL)) {

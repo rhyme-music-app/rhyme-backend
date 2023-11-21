@@ -59,7 +59,7 @@ class PlaylistAccess
     private static function readPlaylist(string $playlistId): array
     {
         $stmt = DatabaseConnection::prepare('SELECT
-            id, name, owned_by, is_public,
+            id, name, image_link, owned_by, is_public,
             added_at, updated_at
             FROM playlists
             WHERE id = :playlistId;'

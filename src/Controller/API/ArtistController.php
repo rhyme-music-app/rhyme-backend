@@ -25,7 +25,7 @@ class ArtistController extends AbstractController
     public function indexArtists(): JsonResponse
     {
         return ListResponse::selectAllFromOneTable('artists', [
-            'id', 'name', 'type', 'added_at', 'updated_at', 'added_by', 'updated_by'
+            'id', 'name', 'image_link', 'added_at', 'updated_at', 'added_by', 'updated_by'
         ]);
     }
 
@@ -50,13 +50,14 @@ class ArtistController extends AbstractController
         Validator::validateArtistUpdate_AllMustPresent($data);
 
         $stmt = DatabaseConnection::prepare('INSERT INTO artists
-        (name, type, added_at, updated_at, added_by, updated_by)
+        (name, image_link, added_at, updated_at, added_by, updated_by)
         VALUES
-        (:name, :type, :added_at, :updated_at, :added_by, :updated_by);');
+        (:name, :image_link, :added_at, :updated_at, :added_by, :updated_by);');
 
         $now = new DateTime();
+        $data['image_link'] = $data['image_link'] ?? null;
         $stmt->bindParam(':name', $data['name'], QueryParam::STR);
-        $stmt->bindParam(':type', $data['type'], QueryParam::STR);
+        $stmt->bindParam(':image_link', $data['image_link'], QueryParam::STR);
         $stmt->bindParam(':added_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':updated_at', $now, QueryParam::DATETIME);
         $stmt->bindParam(':added_by', $userId, QueryParam::STR);
@@ -114,5 +115,30 @@ class ArtistController extends AbstractController
         $stmt->execute();
 
         return new NormalizedJsonResponse([], 200);
+    }
+
+    /**
+     * Route 6
+     */
+    #[Route('/{artistId<\d+>}/songs', name: 'get_artist_songs', methods: ['GET'])]
+    public function getArtistSongs(string $artistId): JsonResponse
+    {
+        $songFields = [
+            'id', 'name', 'audio_link', 'image_link',
+            'added_at', 'updated_at',
+            'added_by', 'updated_by',
+            'streams'
+        ];
+        $stmt = DatabaseConnection::prepare('SELECT
+            ' . implode(', ', $songFields) . '
+            FROM
+                songs s
+            INNER JOIN artist_song pivot
+                ON pivot.song_id = s.id
+            WHERE
+                pivot.artist_id = :artistId;'
+        );
+        $stmt->bindParam(':artistId', $artistId, QueryParam::STR);
+        return ListResponse::withCustomQuery($stmt, $songFields);
     }
 }

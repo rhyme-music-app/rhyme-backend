@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rhyme: Admin Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="css/global.css">
+    <link rel="stylesheet" type="text/css" href="/css/global.css">
 </head>
 <body>
     {{ include("components/_header.html.twig") }}
@@ -14,6 +14,22 @@
     {% else %}
 
 
+    <div class="section">
+        <h2>Manage songs</h2>
+        <a href="/manage/songs">Click here to open the Song Manager.</a>
+    </div>
+
+
+    <div class="section">
+        <h2>Manage genres</h2>
+        <a href="/manage/genres">Click here to open the Genre Manager.</a>
+    </div>
+
+
+    <div class="section">
+        <h2>Manage artists</h2>
+        <a href="/manage/artists">Click here to open the Artist Manager.</a>
+    </div>
 
 
     <div class="section">

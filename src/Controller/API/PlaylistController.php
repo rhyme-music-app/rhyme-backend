@@ -14,8 +14,6 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('playlists', name: 'playlists_')]
@@ -30,7 +28,7 @@ class PlaylistController extends AbstractController
         $user = Auth::getUserNoException($request);
 
         return ListResponse::selectFromOneTableWithCommandTail('playlists', [
-            'id', 'name', 'owned_by', 'is_public',
+            'id', 'name', 'image_link', 'owned_by', 'is_public',
             'added_at', 'updated_at'
         ], (
             $user === null
@@ -62,12 +60,14 @@ class PlaylistController extends AbstractController
         Validator::validatePlaylistUpdate_AllMustPresent($data);
 
         $stmt = DatabaseConnection::prepare('INSERT INTO playlists
-        (name, owned_by, is_public, added_at, updated_at)
+        (name, image_link, owned_by, is_public, added_at, updated_at)
         VALUES
-        (:name, :owned_by, :is_public, :added_at, :updated_at);');
+        (:name, :image_link, :owned_by, :is_public, :added_at, :updated_at);');
 
         $now = new DateTime();
+        $data['image_link'] = $data['image_link'] ?? null;
         $stmt->bindParam(':name', $data['name'], QueryParam::STR);
+        $stmt->bindParam(':image_link', $data['image_link'], QueryParam::STR);
         $stmt->bindParam(':owned_by', $userId, QueryParam::STR);
         $stmt->bindParam(':is_public', $data['is_public'], QueryParam::BOOL);
         $stmt->bindParam(':added_at', $now, QueryParam::DATETIME);
@@ -135,7 +135,7 @@ class PlaylistController extends AbstractController
         $playlist = PlaylistAccess::assertViewer($playlistId, $user);
 
         $songFields = [
-            'id', 'name', 'audio_link',
+            'id', 'name', 'audio_link', 'image_link',
             'added_at', 'updated_at',
             'added_by', 'updated_by',
             'streams'

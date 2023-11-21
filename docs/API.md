@@ -422,6 +422,22 @@
      - Empty payload.
      - Empty response on success.
 
+6. **GET /api/artists/{artist_id}/songs**
+
+    Retrieves a list of this artist's songs.
+
+     - Empty payload.
+     - Response on success:
+
+        ```json
+        {
+            "list": [ ... ]
+        }
+        ```
+
+        where `[ ... ]` is a list of [`SongInfo`](#songinfo)
+        objects.
+
 ### Song API
 
 1. **GET /api/songs**
@@ -546,7 +562,6 @@ The following object schemas are listed in their alphabetical order.
     "success": true,
     "id": "123",
     "name": "Frederic Chopin",
-    "type": "composer",
     "added_at": "When was this artist added. See notes about datetimes.",
     "updated_at": "When was this artist last updated. See notes about datetimes.",
     "added_by": "ID of the user that added this artist",
@@ -559,7 +574,6 @@ The following object schemas are listed in their alphabetical order.
 ```json
 {
     "name": "Alan Walker",
-    "type": "One of the following values: singer, rapper, composer, dj, producer, pianist, violinist"
 }
 ```
 

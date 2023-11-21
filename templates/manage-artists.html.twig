@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Artists</title>
+    <link rel="stylesheet" type="text/css" href="/css/global.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+</head>
+<body>
+    {{ include("components/_header.html.twig") }}
+    <h1>Artist Manager</h1>
+    {% if not user.authenticated %}
+    <p style="color: red;">Please <a href="/login">log in as an administrator</a> to view this page.</p>
+    {% else %}
+
+
+    <button class="button" onclick="back()" style="margin: 20px;">Back</button>
+
+    <div id="error-section-wrapper" style="color: red; display: none;">
+        <b>ERROR:</b> <span id="error-section"></span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image Link</th>
+                <th>Added At</th>
+                <th>Updated At</th>
+                <th>Added By</th>
+                <th>Updated By</th>
+                <th>OPERATIONS</th>
+            </tr>
+        </thead>
+        <tbody id="artist-list">
+        </tbody>
+    </table>
+
+    <button class="button button-primary" onclick="javascript:addArtist();">Add artist</button>
+
+    <script>
+        function back() {
+            window.location.href = '/dashboard';
+        }
+
+        function addArtist() {
+            window.location.href = "/manage/artists/editor";
+        }
+
+        const onError = (err) => {
+            document.getElementById('error-section').innerHTML = err?.message;
+            document.getElementById('error-section-wrapper').style.display = 'block';
+        };
+
+        window.onload = () => {
+            const artistList = document.getElementById('artist-list');
+            while (artistList.lastChild) {
+                artistList.removeChild(artistList.lastChild);
+            }
+
+            fetch('/api/artists', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    onError(data);
+                    return;
+                }
+
+                const convertFieldToHtmlTd = (artist, fieldName) => {
+                    const td = document.createElement('td');
+                    td.innerHTML = (
+                        artist[fieldName] === null
+                        ? `<span class="entity-${fieldName} null-cell">null</span>`
+                        : `<span class="entity-${fieldName}">${
+                            fieldName.includes('link')
+                            ? `<a href="${artist[fieldName]}">${artist[fieldName]}</a>`
+                            : artist[fieldName]
+                        }</span>`
+                    );
+                    return td;
+                }
+
+                const createOperationsTd = (artist) => {
+                    const onEdit = () => {
+                        window.location.href = `/manage/artists/editor?id=${artist.id}`;
+                    };
+                    const onDelete = () => {
+                        if (confirm(`Are you sure to delete this artist?\n\n${artist.name}`)) {
+                            fetch(`/api/artists/${artist.id}`, {
+                                method: 'DELETE'
+                            })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (!data?.success) {
+                                    onError(data);
+                                    return;
+                                }
+
+                                window.location.reload();
+                            })
+                            .catch(onError);
+                        }
+                    };
+
+                    const editButton = document.createElement('button');
+                    editButton.innerHTML = "Edit";
+                    editButton.className = "button";
+                    editButton.onclick = onEdit;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = "Delete";
+                    deleteButton.className = "button button-danger";
+                    deleteButton.onclick = onDelete;
+
+                    const operationTd = document.createElement('td');
+                    operationTd.className = 'entity-operations';
+                    operationTd.appendChild(editButton);
+                    operationTd.appendChild(deleteButton);
+                    return operationTd;
+                };
+
+                for (const artist of data.list) {
+                    const tr = document.createElement('tr');
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'id'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'name'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'image_link'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'added_at'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'updated_at'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'added_by'));
+                    tr.appendChild(convertFieldToHtmlTd(artist, 'updated_by'));
+                    tr.appendChild(createOperationsTd(artist));
+                    artistList.appendChild(tr);
+                }
+            })
+            .catch(onError);
+        }
+    </script>
+
+
+
+
+    {% endif %}
+    {{ include("components/_footer.html.twig") }}
+</body>
+</html>

@@ -1,0 +1,28 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 7px;
+    margin: 5px;
+    font-size: large;
+}
+
+.null-cell {
+    color: red;
+}
+
+.entity-name {
+    font-weight: bold;
+}
+
+.entity-name-td {
+    min-width: 200px;
+}
+
+.entity-audio_link-td, .entity-image_link-td {
+    word-wrap: break-word;
+    max-width: 100px;
+}
+
+.entity-operations > .button {
+    margin: 10px;
+}

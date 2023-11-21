@@ -41,11 +41,13 @@ class AuthController extends AbstractController
         unset($password);
 
         $stmt = DatabaseConnection::prepare(
-            'INSERT INTO users (email, name, password_hash, is_admin)
-            VALUES (:email, :name, :password_hash, :is_admin);'
+            'INSERT INTO users (email, name, image_link, password_hash, is_admin)
+            VALUES (:email, :name, :image_link, :password_hash, :is_admin);'
         );
+        $data['image_link'] = $data['image_link'] ?? null;
         $stmt->bindParam(':email', $email, QueryParam::STR);
         $stmt->bindParam(':name', $name, QueryParam::STR);
+        $stmt->bindParam(':image_link', $data['image_link'], QueryParam::STR);
         $stmt->bindParam(':password_hash', $passwordHash, QueryParam::STR);
         $stmt->bindParam(':is_admin', $isAdmin, QueryParam::BOOL);
         $stmt->execute();
@@ -65,7 +67,11 @@ class AuthController extends AbstractController
         $email = $data['email'];
         $password = $data['password'];
 
-        $stmt = DatabaseConnection::prepare('SELECT id, email, name, password_hash, is_admin, deleted FROM users WHERE email = :email');
+        $stmt = DatabaseConnection::prepare('SELECT
+                id, email, name, image_link, password_hash, is_admin, deleted
+            FROM users
+            WHERE email = :email'
+        );
         $stmt->bindParam(':email', $email, QueryParam::STR);
         $stmt->execute();
 

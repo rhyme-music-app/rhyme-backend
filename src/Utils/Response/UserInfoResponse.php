@@ -12,7 +12,7 @@ class UserInfoResponse extends NormalizedJsonResponse
     public function __construct(string $userId)
     {
         $stmt = DatabaseConnection::prepare(
-            'SELECT id, email, name, is_admin, deleted
+            'SELECT id, email, name, is_admin, image_link, deleted
             FROM users WHERE id = :id;'
         );
         $stmt->bindParam(':id', $userId, QueryParam::STR);

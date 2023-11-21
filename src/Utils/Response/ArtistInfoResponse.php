@@ -13,7 +13,7 @@ class ArtistInfoResponse extends NormalizedJsonResponse
     {
         $stmt = DatabaseConnection::prepare(
             'SELECT
-                id, name, type, added_at, updated_at, added_by, updated_by
+                id, name, image_link, added_at, updated_at, added_by, updated_by
             FROM artists
             WHERE id = :artistId;'
         );

@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`genres` (
   `name` VARCHAR(256) NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
-  `added_by` INT NOT NULL,
-  `updated_by` INT NOT NULL,
+  `added_by` INT NULL,
+  `updated_by` INT NULL,
   `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
@@ -53,12 +53,12 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`genres` (
   CONSTRAINT `fk_genres_updated_by_users_id`
     FOREIGN KEY (`updated_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_genres_added_by_users_id`
     FOREIGN KEY (`added_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`artists` (
   `name` VARCHAR(512) NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
-  `added_by` INT NOT NULL,
-  `updated_by` INT NOT NULL,
+  `added_by` INT NULL,
+  `updated_by` INT NULL,
   `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_artists_users_id_idx` (`added_by` ASC) VISIBLE,
@@ -83,12 +83,12 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`artists` (
   CONSTRAINT `fk_artists_added_by_users_id`
     FOREIGN KEY (`added_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_artists_updated_by_users_id`
     FOREIGN KEY (`updated_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`songs` (
   `audio_link` VARCHAR(2048) CHARACTER SET 'ascii' COLLATE 'ascii_general_ci' NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
-  `added_by` INT NOT NULL,
-  `updated_by` INT NOT NULL,
+  `added_by` INT NULL,
+  `updated_by` INT NULL,
   `streams` BIGINT(100) NOT NULL,
   `image_link` VARCHAR(2048) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -115,12 +115,12 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`songs` (
   CONSTRAINT `fk_songs_added_by_users_id`
     FOREIGN KEY (`added_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_songs_updated_by_users_id`
     FOREIGN KEY (`updated_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
@@ -133,7 +133,7 @@ DROP TABLE IF EXISTS `rhyme`.`playlists` ;
 CREATE TABLE IF NOT EXISTS `rhyme`.`playlists` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(512) NOT NULL,
-  `owned_by` INT NOT NULL,
+  `owned_by` INT NULL,
   `is_public` TINYINT NOT NULL,
   `added_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `rhyme`.`playlists` (
   CONSTRAINT `fk_playlists_users_id`
     FOREIGN KEY (`owned_by`)
     REFERENCES `rhyme`.`users` (`id`)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 

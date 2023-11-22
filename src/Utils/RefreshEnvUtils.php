@@ -36,6 +36,8 @@ class RefreshEnvUtils
 
             if ($changeSecret) self::replaceEnv($content, 'APP_SECRET', $oldEnv['APP_SECRET'] ?? '', self::generate_APP_SECRET());
 
+            self::replaceEnv($content, 'CORS_ALLOW_ORIGIN', $oldEnv['CORS_ALLOW_ORIGIN'] ?? '', $oldEnv['CORS_ALLOW_ORIGIN'] ?? '\'^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$\'');
+
             self::replaceEnv($content, 'DATABASE_HOST', $oldEnv['DATABASE_HOST'] ?? '', $newValues['dbhost']);
 
             self::replaceEnv($content, 'DATABASE_PORT', $oldEnv['DATABASE_PORT'] ?? '', $newValues['dbport']);

@@ -35,3 +35,6 @@ sudo        ./linux-enable-php-extensions.sh
 
 On Windows, find the `php.ini` file and uncomment the `extension=X` lines,
 where `X` is the name of a required extension. (Google for more.)
+
+Finally, to allow the application to work with Algolia-based search,
+you have to follow the instructions [here](https://stackoverflow.com/a/31830614/13680015).

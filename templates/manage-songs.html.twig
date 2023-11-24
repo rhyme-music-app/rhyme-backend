@@ -17,32 +17,98 @@
 
     <button class="button" onclick="back()" style="margin: 20px;">Back</button>
 
-    <div id="error-section-wrapper" style="color: red; display: none;">
-        <b>ERROR:</b> <span id="error-section"></span>
+    <div class="section">
+        <div id="error-section-wrapper" style="color: red; display: none;">
+            <b>ERROR:</b> <span id="error-section"></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Audio Link</th>
+                    <th>Image Link</th>
+                    <th>Added At</th>
+                    <th>Updated At</th>
+                    <th>Added By</th>
+                    <th>Updated By</th>
+                    <th>Streams</th>
+                    <th>OPERATIONS</th>
+                </tr>
+            </thead>
+            <tbody id="song-list">
+            </tbody>
+        </table>
+        <button class="button button-primary" onclick="javascript:addSong();">Add song</button>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Audio Link</th>
-                <th>Image Link</th>
-                <th>Added At</th>
-                <th>Updated At</th>
-                <th>Added By</th>
-                <th>Updated By</th>
-                <th>Streams</th>
-                <th>OPERATIONS</th>
-            </tr>
-        </thead>
-        <tbody id="song-list">
-        </tbody>
-    </table>
-    <button class="button button-primary" onclick="javascript:addSong();">Add song</button>
+
+    <div class="section">
+        <h2>Update Song Search Index</h2>
+        <p style="color: red;">If songs you&#39;ve added do not appear in the frontend's search bar, you should update Algolia Song Search Index.</p>
+        <div>
+            <input type="checkbox" id="delete-old-index-records">
+            <label for="delete-old-index-records">Delete old index records</label>
+        </div>
+        <div>
+            <button class="button button-primary" onclick="updateSongSearchIndex()">
+                Update Index
+            </button>
+            <span id="updating-song-index" style="display: none; color: #CCCC00;">Working...</span>
+        </div>
+        <div id="update-song-index-error-wrapper" style="color: red; display: none;">
+            <b>ERROR: </b>
+            <span id="update-song-index-error"></span>
+        </div>
+        <div id="update-song-index-success-wrapper" style="color: green; display: none;">
+            <b>SUCCESS: </b>
+            <span id="update-song-index-success"></span>
+        </div>
+    </div>
 
     <script>
         function back() {
             window.location.href = '/dashboard';
+        }
+
+        function updateSongSearchIndex() {
+            const deleteOldIndexRecords = document.getElementById('delete-old-index-records').checked;
+            const updateSongIndexErrorWrapper = document.getElementById('update-song-index-error-wrapper');
+            const updateSongIndexError = document.getElementById('update-song-index-error');
+            const updateSongIndexSuccessWrapper = document.getElementById('update-song-index-success-wrapper');
+            const updateSongIndexSuccess = document.getElementById('update-song-index-success');
+            const loadingIndicator = document.getElementById('updating-song-index');
+
+            const setError = (err) => {
+                updateSongIndexSuccessWrapper.style.display = 'none';
+                updateSongIndexSuccess.innerHTML = '';
+                updateSongIndexError.innerHTML = err?.message;
+                updateSongIndexErrorWrapper.style.display = 'block';
+            };
+
+            const setSuccess = (data) => {
+                updateSongIndexErrorWrapper.style.display = 'none';
+                updateSongIndexError.innerHTML = '';
+                updateSongIndexSuccess.innerHTML = data.message;
+                updateSongIndexSuccessWrapper.style.display = 'block';
+            };
+
+            loadingIndicator.style.display = 'block';
+            updateSongIndexErrorWrapper.style.display = 'none';
+            updateSongIndexSuccessWrapper.style.display = 'none';
+            fetch(`/api/index/songs${deleteOldIndexRecords ? '?reset=true' : ''}`, {
+                method: 'PATCH',
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data?.success) {
+                    return setError(data);
+                }
+                setSuccess(data);
+            })
+            .catch(setError)
+            .finally(() => {
+                loadingIndicator.style.display = 'none';
+            });
         }
 
         function addSong() {

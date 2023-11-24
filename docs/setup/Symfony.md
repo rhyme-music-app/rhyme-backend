@@ -37,7 +37,9 @@ while following the steps, read file [`TROUBLESHOOTING.md`](../TROUBLESHOOTING.m
    php bin/console --help app:refresh-env-symfony
    ```
 
-3. **Now the setup completed. You don't have to repeat the above steps**
+3. Setup Algolia credentials. [More details here](./algolia-notes.md).
+
+4. **Now the setup completed. You don't have to repeat the above steps**
    **anymore.**
 
    From now on, you just have to do this step to switch the application on.

@@ -31,13 +31,13 @@ This repository holds the backend of the app. The frontend is housed at:
 
 ## Features
 
-🔐 Authentication
-🎵 Music Player
-🔍 Search Songs
-❤️  Like Songs
-🎶 Create Playlists
-➕ Add Songs to Playlists
-💻 Fully responsive
+🔐 Authentication.
+🎵 Music Player.
+🔍 Search Songs.
+❤️  Like Songs.
+🎶 Create Playlists.
+➕ Add Songs to Playlists.
+💻 Fully responsive.
 
 
 ## Database Schema

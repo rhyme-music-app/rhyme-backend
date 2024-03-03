@@ -48,7 +48,7 @@ This repository holds the backend of the app. The frontend is housed at:
 
 ## Database Schema
 
-[`LICENSE.md`](/docs/erd.png)
+(/docs/erd.png)
 
 
 

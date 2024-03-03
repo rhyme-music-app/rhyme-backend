@@ -30,7 +30,9 @@ while following the steps, read file [`TROUBLESHOOTING.md`](../TROUBLESHOOTING.m
    php bin/console app:refresh-env-docker
    ```
 
-3. Make sure the Docker service (daemon) has started.
+3. Setup Algolia credentials. [More details here](./algolia-notes.md).
+
+4. Make sure the Docker service (daemon) has started.
 
    **On Windows**, open Docker Desktop, then close the window. (If it
    displays "Docker Desktop starting...", wait for that message to
@@ -65,7 +67,7 @@ while following the steps, read file [`TROUBLESHOOTING.md`](../TROUBLESHOOTING.m
     sudo service docker start
     ```
 
-4. Still in the project root, to build Docker image, run the following
+5. Still in the project root, to build Docker image, run the following
    command **on Windows**:
 
    ```powershell
@@ -78,7 +80,7 @@ while following the steps, read file [`TROUBLESHOOTING.md`](../TROUBLESHOOTING.m
    sudo docker compose build
    ```
 
-5. **Now the setup completed. You don't have to repeat the above steps**
+6. **Now the setup completed. You don't have to repeat the above steps**
    **anymore, unless one of the Docker files (`docker-compose.yml` and**
    **`Dockerfile`) has been changed.**
 

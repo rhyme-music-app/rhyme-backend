@@ -551,6 +551,26 @@
      - Empty payload.
      - Empty response on success.
 
+### Indexing API
+
+This web project uses Algolia for searching (which is used by
+the search bar in the frontend).
+
+After adding several searchable objects, we have to access the
+Indexing API endpoints to update Algolia records.
+
+1. **PATCH AUTH ADMIN /api/index/songs, /api/index/songs?reset=true**
+
+    Updates Algolia records for songs, so that the newly-added songs
+    could appear in the frontend's search bar when being searched for.
+
+    By default, this won't remove records of deleted songs. Add query
+    paramater `?reset=true` if you want to also remove those unused
+    records.
+
+     - Empty payload.
+     - Empty response on success.
+
 ## JSON Object Schemas
 
 The following object schemas are listed in their alphabetical order.

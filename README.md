@@ -42,7 +42,8 @@ This repository holds the backend of the app. The frontend is housed at:
 
 ## Database Schema
 
-![alt text](https://github.com/rhyme-music-app/rhyme-backend/docs/erd.png?raw=true)
+![erd](https://github.com/tsun165/rhyme-backend/assets/125455011/6bc2459a-f59c-410a-9035-82883bef4145)
+
 
 ## Technologies
 

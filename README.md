@@ -50,8 +50,6 @@ This repository holds the backend of the app. The frontend is housed at:
 
 ![erd](./docs/images/erd.png)
 
-
-
 ## Technologies
 
 Rhyme API is based on Symfony PHP Framework.

@@ -1,4 +1,10 @@
-Copyright (c) 2023-now Vu Tung Lam, Nguyen Huu Phuong and Do Thai Son.
+Copyright (c) 2023-now Rhyme Creators and Contributors:
+- Vũ Tùng Lâm
+- Hoàng Văn Phi
+- Nguyễn Hữu Phương
+- Vũ Tùng Lâm
+- Đỗ Thái Sơn
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

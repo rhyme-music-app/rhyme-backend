@@ -31,11 +31,24 @@ This repository holds the backend of the app. The frontend is housed at:
 
 ## Features
 
-(Write this later)
+🔐 Authentication.
+
+🎵 Music Player.
+
+🔍 Search Songs.
+
+❤️  Like Songs.
+
+🎶 Create Playlists.
+
+➕ Add Songs to Playlists.
+
+💻 Fully responsive.
+
 
 ## Database Schema
 
-(Write this later)
+![erd](./docs/images/erd.png)
 
 ## Technologies
 

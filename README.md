@@ -55,7 +55,6 @@ This repository holds the backend of the app. The frontend is housed at:
 
 💻 Fully responsive.
 
-
 ## Database Schema
 
 ![erd](./docs/images/erd.png)

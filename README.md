@@ -47,7 +47,7 @@ This repository holds the backend of the app. The frontend is housed at:
 
 🔍 Search Songs.
 
-❤️  Like Songs.
+❤️ Like Songs.
 
 🎶 Create Playlists.
 

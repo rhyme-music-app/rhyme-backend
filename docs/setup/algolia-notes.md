@@ -1,11 +1,11 @@
 # Algolia Notes
 
-Looking at the generated `.env` file you will see empty `ALGOLIA_APP_ID`
-and `ALGOLIA_WRITE_KEY` environment variables.
+Looking at the generated `.env` file you will see empty `ALGOLIA_APP_ID`,
+`ALGOLIA_WRITE_KEY` and `ALGOLIA_INDEX` environment variables.
 
 To obtain those Algolia credentials, create a new Algolia application,
-then create a new index named `rhyme_songs` inside it. Finally, copy
-the credentials from the Algolia website into the vacancies.
+then create a new index inside it. Finally, copy the credentials and
+the index name from the Algolia website into the vacancies.
 
 `ALGOLIA_WRITE_KEY` is actually Admin API key.
 

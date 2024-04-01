@@ -82,9 +82,10 @@ final class AlgoliaUtils
 
         $ALGOLIA_APP_ID = self::readMandatoryEnv('ALGOLIA_APP_ID');
         $ALGOLIA_WRITE_KEY = self::readMandatoryEnv('ALGOLIA_WRITE_KEY');
+        $ALGOLIA_INDEX = self::readMandatoryEnv('ALGOLIA_INDEX');
 
         self::$client = SearchClient::create($ALGOLIA_APP_ID, $ALGOLIA_WRITE_KEY);
-        self::$songIndex = self::$client->initIndex('rhyme_songs');
+        self::$songIndex = self::$client->initIndex($ALGOLIA_INDEX);
         self::$songIndex->setSettings([
             'searchableAttributes' => [
                 'name',

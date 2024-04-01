@@ -42,6 +42,8 @@ class RefreshEnvUtils
 
             self::replaceEnv($content, 'ALGOLIA_WRITE_KEY', $oldEnv['ALGOLIA_WRITE_KEY'] ?? '', $oldEnv['ALGOLIA_WRITE_KEY'] ?? '');
 
+            self::replaceEnv($content, 'ALGOLIA_INDEX', $oldEnv['ALGOLIA_INDEX'] ?? '', $oldEnv['ALGOLIA_INDEX'] ?? '');
+
             self::replaceEnv($content, 'DATABASE_HOST', $oldEnv['DATABASE_HOST'] ?? '', $newValues['dbhost']);
 
             self::replaceEnv($content, 'DATABASE_PORT', $oldEnv['DATABASE_PORT'] ?? '', $newValues['dbport']);

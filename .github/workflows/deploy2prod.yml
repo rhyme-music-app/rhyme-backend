@@ -1,0 +1,26 @@
+name: Deploy to Production at rhyme-be.vutunglam.id.rhyme-be.vutunglam.id.vn
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  Deploy:
+    env:
+      SERVER_CERTIFICATE: ${{ secrets.SERVER_CERTIFICATE }}
+      FTP_HOST: ${{ secrets.FTP_HOST }}
+      FTP_PORT: ${{ secrets.FTP_PORT }}
+      FTP_USER: ${{ secrets.FTP_USER }}
+      FTP_PASS: ${{ secrets.FTP_PASS }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Production
+        run: |
+          chmod +x ./linux-enable-php-extensions.sh \
+          && ./linux-enable-php-extensions.sh \
+          && chmod +x ./.github/workflows/deploy2prod.sh \
+          && ./.github/workflows/deploy2prod.sh
+        shell: bash

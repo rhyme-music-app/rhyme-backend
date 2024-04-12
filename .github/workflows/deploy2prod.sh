@@ -6,9 +6,9 @@
 # FTP_USER
 # FTP_PASS
 
-apt update
-apt upgrade -y
-apt install -y ca-certificates openssl lftp composer
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y ca-certificates openssl lftp composer pcregrep
 
 if [ $? -ne 0 ]; then
     echo "could not install some dependencies"
@@ -16,10 +16,32 @@ if [ $? -ne 0 ]; then
 fi
 
 ############################
+# INSTALL PHP DEPENDENCIES #
+############################
+
+echo "Using Composer: $(composer --version)"
+composer install
+composer dump-autoload
+
+#############
+# RUN TESTS #
+#############
+
+####################################################
+# From now on is the DEPLOYMENT (CD) stuff, not CI #
+####################################################
+
+# https://stackoverflow.com/a/67793230/13680015
+if [[ "$(git branch --show-current)" != "prod" ]]; then
+    echo "script won't deploy to production since this is not the 'prod' branch ; everything is ok, exiting"
+    exit 0
+fi
+
+############################
 # UPDATE ROOT CERTIFICATES #
 ############################
 
-update-ca-certificates
+sudo update-ca-certificates
 
 if [ $? -ne 0 ]; then
     echo "could not update CA certificates"
@@ -36,7 +58,7 @@ fi
 # ADD SERVER CERTIFICATE #
 ##########################
 
-cat $CA_FILE | grep "$SERVER_CERTIFICATE"
+cat $CA_FILE | pcregrep -M -e "$SERVER_CERTIFICATE"
 if [ $? -ne 0 ]; then
     echo $SERVER_CERTIFICATE >> $CA_FILE
     if [ $? -ne 0 ]; then
@@ -67,7 +89,7 @@ fi
 
 LFTP_SETUP_COMMAND="set ssl:ca-file \"$CA_FILE\""
 
-cat $LFTP_CONFIG_FILE | grep "$LFTP_SETUP_COMMAND"
+cat $LFTP_CONFIG_FILE | pcregrep -M -e "$LFTP_SETUP_COMMAND"
 if [ $? -ne 0 ]; then
     echo $LFTP_SETUP_COMMAND >> $LFTP_CONFIG_FILE
     if [ $? -ne 0 ]; then
@@ -76,16 +98,9 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-############################
-# INSTALL PHP DEPENDENCIES #
-############################
-
-composer install
-composer dump-autoload
-
 #########################################################
 # RUN lftp TO SYNC REMOTE FILESYSTEM WITH THE LOCAL ONE #
 #########################################################
 
-lftp -u "$FTP_USER,$FTP_PASS" $FTP_HOST -p $FTP_PORT -e "mirror -P --continue --reverse --delete --verbose --exclude .env --exclude .ftpquota --exclude .git/ --exclude .github/ --exclude .htaccess ; exit"
+sudo lftp -u "$FTP_USER,$FTP_PASS" $FTP_HOST -p $FTP_PORT -e "ls ; mirror -P --continue --reverse --delete --verbose --exclude \\.env --exclude \\.ftpquota --exclude \\.git/ --exclude \\.github/ --exclude ^\\.htaccess\$ --exclude var ; exit"
 exit $?

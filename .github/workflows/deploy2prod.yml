@@ -1,4 +1,4 @@
-name: Deploy to Production at rhyme-be.vutunglam.id.rhyme-be.vutunglam.id.vn
+name: Deploy to Production at rhyme-be.vutunglam.id.vn
 on:
   push:
     branches:
@@ -11,16 +11,20 @@ jobs:
       FTP_PORT: ${{ secrets.FTP_PORT }}
       FTP_USER: ${{ secrets.FTP_USER }}
       FTP_PASS: ${{ secrets.FTP_PASS }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: .
     steps:
       - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: curl, fileinfo, gd, intl, mbstring, mysqli, openssl, xml, zip, opcache
+        env:
+          fail-fast: true
       - name: Deploy to Production
         run: |
-          chmod +x ./linux-enable-php-extensions.sh \
-          && ./linux-enable-php-extensions.sh \
-          && chmod +x ./.github/workflows/deploy2prod.sh \
+          chmod +x ./.github/workflows/deploy2prod.sh \
           && ./.github/workflows/deploy2prod.sh
         shell: bash

@@ -60,7 +60,7 @@ fi
 
 cat $CA_FILE | pcregrep -M -e "$SERVER_CERTIFICATE"
 if [ $? -ne 0 ]; then
-    sudo echo $SERVER_CERTIFICATE >> $CA_FILE
+    sudo bash -c "echo '$SERVER_CERTIFICATE' >> $CA_FILE"
     if [ $? -ne 0 ]; then
         echo "could not add server certificate to the system's cert chain"
         exit 1
@@ -91,7 +91,7 @@ LFTP_SETUP_COMMAND="set ssl:ca-file \"$CA_FILE\""
 
 cat $LFTP_CONFIG_FILE | pcregrep -M -e "$LFTP_SETUP_COMMAND"
 if [ $? -ne 0 ]; then
-    echo $LFTP_SETUP_COMMAND >> $LFTP_CONFIG_FILE
+    sudo bash -c "echo '$LFTP_SETUP_COMMAND' >> $LFTP_CONFIG_FILE"
     if [ $? -ne 0 ]; then
         echo "could not add lftp setup command to the lftp config file"
         exit 1

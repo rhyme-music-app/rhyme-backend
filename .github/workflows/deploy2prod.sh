@@ -12,7 +12,7 @@ sudo apt install -y ca-certificates openssl lftp composer pcregrep
 
 if [ $? -ne 0 ]; then
     echo "could not install some dependencies"
-    exit $?
+    exit 1
 fi
 
 ############################
@@ -45,7 +45,7 @@ sudo update-ca-certificates
 
 if [ $? -ne 0 ]; then
     echo "could not update CA certificates"
-    exit $?
+    exit 1
 fi
 
 CA_FILE="/etc/ssl/certs/ca-certificates.crt"
@@ -60,10 +60,10 @@ fi
 
 cat $CA_FILE | pcregrep -M -e "$SERVER_CERTIFICATE"
 if [ $? -ne 0 ]; then
-    echo $SERVER_CERTIFICATE >> $CA_FILE
+    sudo echo $SERVER_CERTIFICATE >> $CA_FILE
     if [ $? -ne 0 ]; then
         echo "could not add server certificate to the system's cert chain"
-        exit $?
+        exit 1
     fi
 fi
 
@@ -94,7 +94,7 @@ if [ $? -ne 0 ]; then
     echo $LFTP_SETUP_COMMAND >> $LFTP_CONFIG_FILE
     if [ $? -ne 0 ]; then
         echo "could not add lftp setup command to the lftp config file"
-        exit $?
+        exit 1
     fi
 fi
 
@@ -103,4 +103,4 @@ fi
 #########################################################
 
 sudo lftp -u "$FTP_USER,$FTP_PASS" $FTP_HOST -p $FTP_PORT -e "ls ; mirror -P --continue --reverse --delete --verbose --exclude \\.env --exclude \\.ftpquota --exclude \\.git/ --exclude \\.github/ --exclude ^\\.htaccess\$ --exclude var ; exit"
-exit $?
+exit 1

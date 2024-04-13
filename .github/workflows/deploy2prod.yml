@@ -1,8 +1,6 @@
 name: Deploy to Production at rhyme-be.vutunglam.id.vn
 on:
-  push:
-    branches:
-      - prod
+  push
 jobs:
   Deploy:
     env:

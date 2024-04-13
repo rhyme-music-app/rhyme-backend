@@ -8,7 +8,7 @@
 
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y ca-certificates openssl lftp composer pcregrep
+sudo apt install -y ca-certificates openssl git-ftp composer pcregrep
 
 if [ $? -ne 0 ]; then
     echo "could not install some dependencies"
@@ -67,40 +67,18 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-##################
-# CONFIGURE lftp #
-##################
+############################################################
+# RUN git-ftp TO SYNC REMOTE FILESYSTEM WITH THE LOCAL ONE #
+############################################################
 
-# Make lftp to use the CA certificates
-# that are just installed and updated:
+git config git-ftp.url "ftpes://$FTP_HOST:$FTP_PORT" \
+&& git config git-ftp.user "$FTP_USER" \
+&& git config git-ftp.password "$FTP_PASS"
 
-LFTP_CONFIG_FILE="/etc/lftp.conf"
-
-if [ ! -f "$LFTP_CONFIG_FILE" ]; then
-    $LFTP_CONFIG_FILE="~/.lftp/rc"
-    if [ ! -f "$LFTP_CONFIG_FILE" ]; then
-        $LFTP_CONFIG_FILE="~/.config/lftp/rc"
-        if [ ! -f "$LFTP_CONFIG_FILE" ]; then
-            echo "lftp config file not found"
-            exit 1
-        fi
-    fi
-fi
-
-LFTP_SETUP_COMMAND="set ssl:ca-file \"$CA_FILE\""
-
-cat $LFTP_CONFIG_FILE | pcregrep -M -e "$LFTP_SETUP_COMMAND"
 if [ $? -ne 0 ]; then
-    sudo bash -c "echo '$LFTP_SETUP_COMMAND' >> $LFTP_CONFIG_FILE"
-    if [ $? -ne 0 ]; then
-        echo "could not add lftp setup command to the lftp config file"
-        exit 1
-    fi
+    echo "GitFTP configuration went wrong"
+    exit 1
 fi
 
-#########################################################
-# RUN lftp TO SYNC REMOTE FILESYSTEM WITH THE LOCAL ONE #
-#########################################################
-
-sudo lftp -u "$FTP_USER,$FTP_PASS" $FTP_HOST -p $FTP_PORT -e "ls ; mirror -P --continue --reverse --delete --verbose --exclude \\.env --exclude \\.ftpquota --exclude \\.git/ --exclude \\.github/ --exclude ^\\.htaccess\$ --exclude var ; exit"
-exit 1
+git ftp push
+exit $?

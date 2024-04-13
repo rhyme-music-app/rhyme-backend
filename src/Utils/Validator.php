@@ -113,14 +113,14 @@ class Validator
     {
         switch ($path) {
             case 'users.email':
-                self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
+                self::_assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     throw new ValidationException($keyName, 'is invalid', $message);
                 }
                 break;
 
             case 'users.password':
-                self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
+                self::_assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 $N = strlen($value);
                 if ($N < 8) {
                     throw new ValidationException($keyName, 'is too short (minimum 8 characters, maximum 24 characters)', $message);
@@ -135,11 +135,11 @@ class Validator
             case 'artists.name':
             case 'songs.name':
             case 'playlists.name':
-                self::assertUnicodeNoSpecialCharsAndNotEmpty($value, $path, $keyName, $message);
+                self::_assertUnicodeNoSpecialCharsAndNotEmpty($value, $path, $keyName, $message);
                 break;
 
             case 'artists.type': // TODO: artists.type is an enum, not an arbitrary string !
-                self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
+                self::_assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 break;
 
             case 'users.image_link':
@@ -149,7 +149,7 @@ class Validator
             case 'genres.image_link':
                 if ($value === null) break;
             case 'songs.audio_link':
-                self::assertAsciiAndNotEmpty($value, $path, $keyName, $message);
+                self::_assertAsciiAndNotEmpty($value, $path, $keyName, $message);
                 if (!filter_var($value, FILTER_VALIDATE_URL)) {
                     throw new ValidationException($keyName, 'is invalid', $message);
                 }
@@ -163,7 +163,7 @@ class Validator
         }
     }
 
-    private static function assertAsciiAndNotEmpty(mixed &$value, string $path, string $keyName, ?string $message): void
+    public static function _assertAsciiAndNotEmpty(mixed &$value, string $path, string $keyName, ?string $message): void
     {
         if (!$value) {
             throw new ValidationException($keyName, 'is empty', $message);
@@ -174,7 +174,7 @@ class Validator
         }
     }
 
-    private static function assertUnicodeNoSpecialCharsAndNotEmpty(mixed &$value, string $path, string $keyName, ?string $message): void
+    public static function _assertUnicodeNoSpecialCharsAndNotEmpty(mixed &$value, string $path, string $keyName, ?string $message): void
     {
         if (!$value) {
             throw new ValidationException($keyName, 'is empty', $message);

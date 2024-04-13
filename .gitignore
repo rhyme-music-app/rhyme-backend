@@ -16,3 +16,8 @@ db-data
 
 # act secrets file
 act.secrets
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

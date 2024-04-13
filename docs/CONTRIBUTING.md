@@ -37,3 +37,19 @@ To go the Symfony way: [click here](./setup/Symfony.md).
 
 Once you get the app up and running, figure out how to use the
 API backend by referring to the [API Documentation](./API.md).
+
+## Running GitHub Actions locally for testing purpose
+
+First, install [`nektos act`](https://nektosact.com/installation/index.html)
+to run GitHub Actions locally like this:
+
+```sh
+act -P ubuntu-22.04=shivammathur/node:2204 --secret-file act.secrets
+```
+
+where `act.secrets` is a file that provides GitHub secrets that
+the GitHub Actions scripts require. Those secrets will be made
+available by `nektos act` when running the scripts locally.
+
+To create your own `act.secrets`, take a look at the file
+`act.secrets.example`.

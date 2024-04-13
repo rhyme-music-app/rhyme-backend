@@ -1,0 +1,16 @@
+docs/
+LICENSE.txt
+README.md
+Dockerfile
+docker-compose.yml
+
+.gitignore
+*/.gitignore      # ignore files in sub directories
+*/.gitkeep
+.git-ftp-ignore
+.git-ftp-include
+.gitlab-ci.yml
+.github/*
+
+# Composer automatically creates this one :))) with just APP_ENV=dev
+.env

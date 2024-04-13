@@ -27,6 +27,12 @@ composer dump-autoload
 # RUN TESTS #
 #############
 
+./vendor/bin/phpunit
+if [ $? -ne 0 ]; then
+    echo "tests failed ; please review your code, run tests locally, and fix all the issues detected"
+    exit 1
+fi
+
 ####################################################
 # From now on is the DEPLOYMENT (CD) stuff, not CI #
 ####################################################

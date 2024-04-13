@@ -80,8 +80,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "SHOWING GIT STATUS"
-git status
+# For unknown reason, this file (deploy2prod.sh)
+# got modified during the earlier steps. To avoid
+# GitFTP's "dirty repo" error, we have to do this
+# in prior to deploying:
+git reset --hard
 
 git ftp push
 exit $?

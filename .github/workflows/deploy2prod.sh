@@ -86,5 +86,5 @@ fi
 # in prior to deploying:
 git reset --hard
 
-git ftp push --force
+git ftp push
 exit $?

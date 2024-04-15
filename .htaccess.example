@@ -1,0 +1,19 @@
+# .htaccess must be configured per server/hosting service.
+# Here is an example, which is ONEPANEL-specific.
+# (On hosting service inet.vn)
+
+## ONEPANEL Force HTTPS by SSL installation
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+Header always set Content-Security-Policy "upgrade-insecure-requests;"
+## ONEPANEL Force HTTPS by SSL installation end
+
+# The following is to redirect all traffic to
+# /public_html/index.php, which is the "entry
+# point" of our application.
+
+RewriteCond %{THE_REQUEST} /public_html/([^\s?]*) [NC]
+RewriteRule ^ %1 [L,NE,R=302]
+
+RewriteRule ^((?!public_html/).*)$ public_html/$1 [L,NC]

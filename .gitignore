@@ -14,8 +14,8 @@
 # Docker-containerized MySQL server's data
 db-data
 
-# act secrets file
-act.secrets
+# Server/Hosting service-specific .htaccess
+.htaccess
 
 ###> phpunit/phpunit ###
 /phpunit.xml

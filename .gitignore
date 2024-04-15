@@ -17,6 +17,12 @@ db-data
 # Server/Hosting service-specific .htaccess
 .htaccess
 
+# Server error log
+error_log
+
+# Public static files
+/public_html/static/
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

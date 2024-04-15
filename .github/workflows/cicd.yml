@@ -1,14 +1,8 @@
-name: Deploy to Production at rhyme-be.vutunglam.id.vn
+name: Rhyme Backend CI/CD
 on:
   push
 jobs:
-  Deploy:
-    env:
-      SERVER_CERTIFICATE: ${{ secrets.SERVER_CERTIFICATE }}
-      FTP_HOST: ${{ secrets.FTP_HOST }}
-      FTP_PORT: ${{ secrets.FTP_PORT }}
-      FTP_USER: ${{ secrets.FTP_USER }}
-      FTP_PASS: ${{ secrets.FTP_PASS }}
+  CICD:
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -24,8 +18,8 @@ jobs:
           extensions: curl, fileinfo, gd, intl, mbstring, mysqli, openssl, xml, zip, opcache
         env:
           fail-fast: true
-      - name: Deploy to Production
+      - name: CICD
         run: |
-          chmod +x ./.github/workflows/deploy2prod.sh \
-          && ./.github/workflows/deploy2prod.sh
+          chmod +x ./.github/workflows/cicd.sh \
+          && ./.github/workflows/cicd.sh
         shell: bash

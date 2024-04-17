@@ -1,5 +1,7 @@
 # Rhyme
 
+[Go to project's GitHub](https://github.com/rhyme-music-app/rhyme-backend)
+
 Rhyme is a music web app featuring basic functionality.
 
 This is a team project.

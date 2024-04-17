@@ -1,5 +1,7 @@
 # API Documentation
 
+[Go to project's GitHub](https://github.com/rhyme-music-app/rhyme-backend)
+
 ## Conventions
 
 ### URL Format (query params)

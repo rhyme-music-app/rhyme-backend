@@ -2,27 +2,48 @@
 
 [Go to project's GitHub](https://github.com/rhyme-music-app/rhyme-backend)
 
+- [API Documentation](#api-documentation)
+  - [Conventions](#conventions)
+  - [Endpoints](#endpoints)
+    - [Authentication API](#authentication-api)
+    - [User API](#user-api)
+    - [Playlist API](#playlist-api)
+    - [Genre API](#genre-api)
+    - [Artist API](#artist-api)
+    - [Song API](#song-api)
+    - [Indexing API](#indexing-api)
+  - [JSON Object Schemas](#json-object-schemas)
+    - [ArtistInfo](#artistinfo)
+    - [ArtistUpdate](#artistupdate)
+    - [GenreInfo](#genreinfo)
+    - [GenreUpdate](#genreupdate)
+    - [PlaylistInfo](#playlistinfo)
+    - [PlaylistUpdate](#playlistupdate)
+    - [SongInfo](#songinfo)
+    - [SongUpdate](#songupdate)
+    - [UserInfo](#userinfo)
+    - [UserUpdate](#userupdate)
+
 ## Conventions
-
-### URL Format (query params)
-
-### JSON Body/Payload and Optional Fields
-
-### Empty Payload
-
-### Default Format of Response
-
-### Authentication Workflow
-
-### Legend
 
 1. **GET, POST, PUT, PATCH**: HTTP methods to be used with each endpoint.
 
 2. **AUTH**: When accessing endpoints marked AUTH, the client must provide the access token of the user.
 
-3. **ADMIN**: When accessing endpoints marked ADMIN, the authenticated user must be an admin. Endpoints not marked ADMIN can be consumed by any authenticated user regardless of they are a normal or an admin user.
+3. **ADMIN**: When accessing endpoints marked ADMIN, the authenticated user must be an admin. Endpoints not marked ADMIN can be consumed by any authenticated user regardless of whether they are a normal or an admin user.
 
 4. **UserInfo, UserUpdate, SongInfo, SongUpdate, GenreInfo, GenreUpdate, PlaylistInfo, PlaylistUpdate**: Go to section [JSON Object Schemas](#json-object-schemas) to see what they are.
+
+5. In this document, **empty response on success** actually means the following JSON response:
+
+    ```json
+    {
+        "success": true
+    }
+    ```
+
+    There's no data other than a field indicating the response's status,
+    hence the name, even though it is not literally empty.
 
 ## Endpoints
 
@@ -656,6 +677,9 @@ Otherwise, specify the updated fields only.
 }
 ```
 
+When adding a new playlist, all the fields are required.
+Otherwise, specify the updated fields only.
+
 ### SongInfo
 
 ```json
@@ -682,6 +706,9 @@ Otherwise, specify the updated fields only.
     "image_link": "The link to image, or null"
 }
 ```
+
+When adding a new song, all the fields are required.
+Otherwise, specify the updated fields only.
 
 ### UserInfo
 
